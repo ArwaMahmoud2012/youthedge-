@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#5B3EFF">
+<title>YouthEdge AI – Your Smart Study Buddy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&family=Inter:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800&family=Noto+Sans+Arabic:wght@500;700&family=Noto+Sans+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple-900:#241a4d;
+    --purple-800:#382a7a;
+    --purple-700:#4d37a8;
+    --purple-600:#5B3EFF;
+    --purple-500:#7c5cff;
+    --amber:#FFB347;
+    --amber-dark:#e0912a;
+    --gold:#FFD24C;
+    --font-heading:'Baloo 2';
+    --font-body:'Inter';
+    --cream:#F7F5FF;
+    --white:#ffffff;
+    --ink:#1c1730;
+    --ink-soft:#6b6485;
+    --line:#e7e3f7;
+    --success:#3ecf8e;
+    --danger:#ff6b6b;
+    --radius:18px;
+  }
+  [data-theme="dark"]{
+    --purple-900:#e9e4ff;
+    --cream:#141024;
+    --white:#1e1836;
+    --ink:#f3f1ff;
+    --ink-soft:#a79fcf;
+    --line:#332a5c;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;}
+  html,body{
+    height:100%;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:var(--font-body),system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    transition:background .2s,color .2s;
+  }
+  html[lang="ar"] body{font-family:'Noto Sans Arabic','Inter',system-ui,sans-serif;}
+  html[lang="zh"] body{font-family:'Noto Sans SC','Inter',system-ui,sans-serif;}
+  h1,h2,h3,.display{font-family:var(--font-heading),system-ui,sans-serif;}
+  html[lang="ar"] h1,html[lang="ar"] h2,html[lang="ar"] h3{font-family:'Noto Sans Arabic',system-ui,sans-serif;}
+  button{font-family:inherit;}
+  input,textarea,select{font-family:inherit;}
+  #app{min-height:100vh;display:flex;flex-direction:column;}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 18px;
+    background:linear-gradient(135deg,var(--purple-600),var(--purple-700));
+    color:#fff;
+    position:sticky;top:0;z-index:20;
+  }
+  .brand{display:flex;align-items:center;gap:10px;}
+  .brand .mark{
+    width:36px;height:36px;border-radius:11px;
+    background:rgba(255,255,255,0.18);
+    display:flex;align-items:center;justify-content:center;
+    font-size:20px;
+  }
+  .brand-text{font-family:var(--font-heading);font-weight:800;font-size:19px;letter-spacing:0.2px;}
+  .topbar-actions{display:flex;gap:6px;align-items:center;}
+  .icon-btn{
+    width:32px;height:32px;border-radius:9px;border:none;
+    background:rgba(255,255,255,0.15);color:#fff;font-size:14px;
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+  }
+  .icon-btn:active{background:rgba(255,255,255,0.28);}
+
+  .auth-wrap{
+    flex:1;display:flex;flex-direction:column;justify-content:center;
+    padding:32px 24px 40px;
+    background:radial-gradient(circle at 20% -10%, #7c5cff33, transparent 60%),var(--cream);
+  }
+  .auth-hero{text-align:center;margin-bottom:28px;}
+  .auth-hero .emoji{font-size:44px;display:block;margin-bottom:6px;}
+  .auth-hero h1{font-size:28px;margin:0 0 6px;color:var(--purple-900);}
+  .auth-hero p{margin:0;color:var(--ink-soft);font-size:15px;}
+  .card{
+    background:var(--white);border-radius:var(--radius);
+    padding:22px;box-shadow:0 10px 30px -14px rgba(56,42,122,0.35);
+    border:1px solid var(--line);
+  }
+  .field{margin-bottom:14px;}
+  .field label{display:block;font-size:13px;font-weight:600;color:var(--purple-900);margin-bottom:6px;}
+  .field input, .field select{
+    width:100%;padding:12px 14px;border-radius:12px;
+    border:1.5px solid var(--line);font-size:15px;background:var(--cream);
+    outline:none;color:var(--ink);
+  }
+  .field input:focus, .field select:focus{border-color:var(--purple-500);}
+  .btn{
+    width:100%;padding:13px 16px;border-radius:12px;border:none;
+    font-weight:700;font-size:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn-primary{background:var(--purple-600);color:#fff;}
+  .btn-primary:active{background:var(--purple-700);}
+  .btn-ghost{background:transparent;color:var(--purple-700);border:1.5px solid var(--line);}
+  .btn-ghost:active{background:#f1eefe;}
+  .btn-sm{width:auto;padding:8px 14px;font-size:13px;border-radius:10px;}
+  .btn[disabled]{opacity:0.6;}
+  .auth-toggle-row{display:flex;gap:8px;margin-bottom:18px;background:var(--cream);border-radius:12px;padding:4px;}
+  .auth-toggle-row button{
+    flex:1;padding:10px;border:none;border-radius:9px;background:transparent;
+    font-weight:700;font-size:14px;color:var(--ink-soft);cursor:pointer;
+  }
+  .auth-toggle-row button.active{background:var(--white);color:var(--purple-700);box-shadow:0 2px 8px rgba(56,42,122,0.12);}
+  .or-row{display:flex;align-items:center;gap:10px;margin:16px 0;color:var(--ink-soft);font-size:12px;}
+  .or-row .line{flex:1;height:1px;background:var(--line);}
+  .auth-error{background:#fff0f0;color:#c53030;border:1px solid #ffd6d6;padding:10px 12px;border-radius:10px;font-size:13px;margin-bottom:14px;}
+  .stack-gap > * + *{margin-top:10px;}
+
+  .main{flex:1;display:flex;flex-direction:column;}
+  .stats-row{display:flex;gap:10px;padding:14px 16px 4px;}
+  .stat-pill{flex:1;background:var(--white);border:1px solid var(--line);border-radius:14px;padding:10px 8px;text-align:center;}
+  .stat-pill .num{font-family:var(--font-heading);font-weight:800;font-size:20px;color:var(--purple-700);}
+  .stat-pill.streak .num{color:var(--amber-dark);}
+  .stat-pill.points .num{color:var(--gold-dark,#b8860b);}
+  .stat-pill .lbl{font-size:11px;color:var(--ink-soft);font-weight:600;text-transform:uppercase;letter-spacing:0.4px;}
+
+  .membership-bar{
+    margin:10px 16px 0;background:var(--white);border:1px solid var(--line);border-radius:14px;
+    padding:10px 12px;cursor:pointer;
+  }
+  .membership-bar .mb-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--purple-800);margin-bottom:6px;}
+  .coin-chip{
+    margin:10px 16px 0;display:flex;align-items:center;justify-content:space-between;
+    background:linear-gradient(135deg,#FFD24C,#FFB347);border-radius:14px;padding:11px 14px;
+    cursor:pointer;color:#5a3c00;font-weight:800;font-size:14.5px;
+  }
+  .coin-chip .cc-right{font-size:12px;font-weight:700;opacity:0.85;}
+  .shop-section{margin-bottom:20px;}
+  .shop-section h3{font-size:14px;margin:0 0 10px;color:var(--purple-900);}
+  .shop-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .shop-item{
+    border:1.5px solid var(--line);border-radius:12px;background:var(--cream);
+    padding:10px 4px;text-align:center;cursor:pointer;font-size:22px;position:relative;
+  }
+  .shop-item.owned{border-color:var(--success);}
+  .shop-item.selected{border-color:var(--purple-600);background:#efeaff;}
+  [data-theme="dark"] .shop-item.selected{background:#2a2150;}
+  .shop-item .si-price{display:block;font-size:10px;font-weight:700;color:var(--ink-soft);margin-top:4px;}
+  .shop-color-swatch{width:100%;height:26px;border-radius:8px;margin-bottom:2px;border:1px solid rgba(0,0,0,0.1);}
+  .perk-card{
+    border:1.5px solid var(--line);border-radius:14px;background:var(--cream);padding:12px;
+    display:flex;align-items:center;gap:10px;margin-bottom:10px;
+  }
+  .perk-card .perk-emoji{font-size:26px;}
+  .perk-card .perk-info{flex:1;}
+  .perk-card .perk-info .pi-title{font-weight:700;font-size:14px;color:var(--purple-900);}
+  .perk-card .perk-info .pi-desc{font-size:11.5px;color:var(--ink-soft);}
+  .perk-card .perk-count{font-size:12px;color:var(--purple-700);font-weight:700;margin-right:4px;}
+  .perk-buy-btn{padding:8px 12px;border-radius:10px;border:none;background:var(--purple-600);color:#fff;font-weight:700;font-size:12.5px;cursor:pointer;white-space:nowrap;}
+  .perk-buy-btn[disabled]{opacity:0.5;}
+  .coin-balance-row{display:flex;align-items:center;justify-content:center;gap:6px;background:var(--cream);border-radius:12px;padding:10px;margin-bottom:18px;font-weight:800;color:#b8860b;font-size:16px;}
+
+  .path-node{display:flex;align-items:center;gap:12px;padding:12px;border-radius:14px;border:1.5px solid var(--line);background:var(--cream);margin-bottom:10px;cursor:pointer;}
+  .path-node.locked{opacity:0.55;cursor:default;}
+  .path-node.done{border-color:var(--success);}
+  .path-node.current{border-color:var(--purple-600);background:#efeaff;}
+  [data-theme="dark"] .path-node.current{background:#2a2150;}
+  .pn-circle{width:38px;height:38px;border-radius:50%;background:var(--white);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex:0 0 38px;color:var(--purple-700);}
+  .path-node.done .pn-circle{background:var(--success);border-color:var(--success);color:#fff;}
+  .path-node.current .pn-circle{background:var(--purple-600);border-color:var(--purple-600);color:#fff;}
+  .pn-info{flex:1;}
+  .pn-info .pn-title{font-weight:700;font-size:14px;color:var(--ink);}
+  .pn-info .pn-status{font-size:11.5px;color:var(--ink-soft);margin-top:2px;}
+
+  .topic-banner{
+    margin:0 16px 8px;background:#efeaff;border:1px solid var(--purple-500);border-radius:12px;
+    padding:8px 12px;display:flex;justify-content:space-between;align-items:center;font-size:12.5px;
+  }
+  [data-theme="dark"] .topic-banner{background:#2a2150;}
+  .topic-banner .tb-title{font-weight:700;color:var(--purple-800);}
+  .topic-banner .tb-progress{color:var(--ink-soft);}
+  .topic-banner button{background:none;border:none;color:var(--purple-700);font-weight:700;font-size:11.5px;cursor:pointer;}
+
+  .compose-box{background:var(--cream);border:1.5px solid var(--line);border-radius:14px;padding:12px;margin-bottom:16px;}
+  .compose-box textarea{width:100%;border:none;background:transparent;resize:none;font-size:14px;outline:none;color:var(--ink);min-height:50px;}
+  .chip-row{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;}
+  .quick-chip{padding:6px 10px;border-radius:999px;border:1px solid var(--line);background:var(--white);font-size:11.5px;font-weight:600;color:var(--purple-700);cursor:pointer;}
+  .post-card{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;background:var(--white);}
+  .post-card .pc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .post-card .pc-name{font-weight:700;font-size:13px;color:var(--purple-900);}
+  .post-card .pc-time{font-size:11px;color:var(--ink-soft);}
+  .post-card .pc-text{font-size:14px;line-height:1.5;margin-bottom:8px;white-space:pre-wrap;}
+  .post-card .pc-actions{display:flex;gap:14px;align-items:center;}
+  .pc-action-btn{background:none;border:none;font-size:12.5px;color:var(--ink-soft);cursor:pointer;font-weight:600;display:flex;align-items:center;gap:4px;}
+  .pc-action-btn.liked{color:var(--danger);}
+  .pc-action-btn.reported{color:var(--ink-soft);text-decoration:line-through;}
+  .community-empty{text-align:center;color:var(--ink-soft);font-size:13.5px;padding:24px 0;}
+  .reply-section{margin-top:8px;border-top:1px solid var(--line);padding-top:8px;}
+  .reply-item{display:flex;gap:6px;font-size:12.5px;margin-bottom:6px;}
+  .reply-item .r-name{font-weight:700;color:var(--purple-800);flex:0 0 auto;}
+  .reply-item .r-text{color:var(--ink);}
+  .reply-input-row{display:flex;gap:6px;margin-top:6px;}
+  .reply-input-row input{flex:1;padding:8px 10px;border-radius:10px;border:1px solid var(--line);font-size:12.5px;background:var(--cream);color:var(--ink);outline:none;}
+  .reply-input-row button{padding:0 12px;border-radius:10px;border:none;background:var(--purple-600);color:#fff;font-size:12px;font-weight:700;cursor:pointer;}
+
+  .interview-setup-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .interview-chat-area{max-height:50vh;overflow-y:auto;display:flex;flex-direction:column;gap:10px;padding:4px 2px;margin-bottom:10px;}
+  .interview-composer{display:flex;gap:8px;align-items:center;}
+  .interview-composer input{flex:1;padding:11px 13px;border-radius:14px;border:1.5px solid var(--line);font-size:14.5px;background:var(--cream);color:var(--ink);outline:none;}
+  .mic-btn{width:44px;height:44px;border-radius:50%;border:none;background:var(--purple-600);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 44px;}
+  .mic-btn.recording{background:var(--danger);animation:pulseRec 1s infinite;}
+  @keyframes pulseRec{0%{box-shadow:0 0 0 0 rgba(255,107,107,0.5);}70%{box-shadow:0 0 0 10px rgba(255,107,107,0);}100%{box-shadow:0 0 0 0 rgba(255,107,107,0);}}
+  .interview-top-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .interview-top-row button{background:none;border:none;font-size:12.5px;font-weight:700;color:var(--purple-700);cursor:pointer;}
+  .interview-status{text-align:center;font-size:12px;color:var(--ink-soft);margin-bottom:6px;min-height:16px;}
+
+  .menu-item{display:flex;align-items:center;gap:12px;padding:14px 8px;border-bottom:1px solid var(--line);cursor:pointer;}
+  .menu-item:last-child{border-bottom:none;}
+  .menu-item .mi-emoji{font-size:22px;flex:0 0 26px;text-align:center;}
+  .menu-item .mi-label{font-weight:700;font-size:15px;color:var(--ink);}
+  .profile-footer{display:flex;align-items:center;gap:12px;padding:16px 8px 4px;margin-top:6px;border-top:1px solid var(--line);}
+  .profile-footer .pf-avatar{width:46px;height:46px;border-radius:50%;background:var(--purple-600);display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;flex:0 0 46px;}
+  .profile-footer .pf-info{flex:1;min-width:0;}
+  .profile-footer .pf-email{font-weight:700;font-size:13.5px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .profile-footer .pf-points{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .profile-footer .pf-edit{background:none;border:none;font-size:18px;cursor:pointer;color:var(--purple-700);flex:0 0 auto;}
+
+  .quiz-level-tabs{display:flex;gap:8px;margin-bottom:14px;}
+  .quiz-level-tabs button{flex:1;padding:11px 4px;border-radius:12px;border:1.5px solid var(--line);background:var(--cream);font-weight:700;font-size:13px;cursor:pointer;color:var(--ink);}
+  .quiz-level-tabs button.active{border-color:var(--purple-600);background:var(--purple-600);color:#fff;}
+  .quiz-class-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;}
+  .quiz-class-chip{padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:var(--white);font-weight:600;font-size:12.5px;color:var(--ink);cursor:pointer;}
+  .quiz-question-card{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:6px;}
+  .quiz-question-card .qq-text{font-size:14.5px;font-weight:600;margin-bottom:12px;line-height:1.5;}
+  .quiz-option-btn{display:block;width:100%;text-align:left;padding:11px 13px;border-radius:12px;border:1.5px solid var(--line);background:var(--white);font-size:13.5px;color:var(--ink);cursor:pointer;margin-bottom:8px;}
+  .quiz-option-btn.correct{border-color:var(--success);background:rgba(62,207,142,0.15);}
+  .quiz-option-btn.incorrect{border-color:var(--danger);background:rgba(255,107,107,0.15);}
+  .quiz-option-btn[disabled]{cursor:default;}
+  .quiz-score-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:12.5px;color:var(--ink-soft);font-weight:700;}
+  .quiz-score-row button{background:none;border:none;color:var(--purple-700);font-weight:700;font-size:12px;cursor:pointer;}
+  .quiz-next-btn{width:100%;padding:12px;border-radius:12px;border:none;background:var(--purple-600);color:#fff;font-weight:700;font-size:14px;cursor:pointer;margin-top:8px;}
+
+  .color-preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px;}
+  .color-preset{aspect-ratio:1;border-radius:14px;cursor:pointer;border:2px solid transparent;display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;}
+  .color-preset.selected{border-color:var(--ink);}
+  .color-preset span{font-size:9px;color:#fff;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,0.4);}
+  .custom-color-row{display:flex;gap:10px;align-items:center;margin-bottom:16px;}
+  .custom-color-row input[type=color]{width:50px;height:44px;border-radius:10px;border:1.5px solid var(--line);background:none;padding:2px;}
+  .admin-save-note{font-size:12px;color:var(--ink-soft);text-align:center;margin-top:6px;}
+
+  .admin-dash-wrap{padding:16px;}
+  .admin-dash-title{font-size:24px;margin:4px 0 2px;color:var(--purple-900);}
+  .admin-dash-sub{color:var(--ink-soft);font-size:13px;margin:0 0 18px;}
+  .admin-card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:16px;}
+  .admin-card h3{margin:0 0 12px;font-size:15px;color:var(--purple-900);}
+  .user-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .user-row:last-child{border-bottom:none;}
+  .user-row .ur-info{flex:1;min-width:0;}
+  .user-row .ur-email{font-weight:700;font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .user-row .ur-meta{font-size:11.5px;color:var(--ink-soft);}
+  .user-row.banned .ur-email{color:var(--danger);}
+  .ban-btn{padding:7px 12px;border-radius:10px;border:none;font-size:12px;font-weight:700;cursor:pointer;flex:0 0 auto;}
+  .ban-btn.do-ban{background:#fff0f0;color:#c53030;}
+  .ban-btn.do-unban{background:#f0fff4;color:#2f855a;}
+
+  .font-option-row{display:flex;flex-direction:column;gap:8px;}
+  .font-option-btn{width:100%;text-align:left;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:var(--cream);cursor:pointer;}
+  .font-option-btn.selected{border-color:var(--purple-600);background:#efeaff;}
+  [data-theme="dark"] .font-option-btn.selected{background:#2a2150;}
+  .font-option-btn .fo-name{font-size:12px;color:var(--ink-soft);margin-bottom:2px;}
+  .font-option-btn .fo-sample{font-size:17px;font-weight:700;color:var(--ink);}
+  .announce-banner{background:linear-gradient(90deg,var(--purple-600),var(--purple-500));color:#fff;padding:9px 16px;font-size:12.5px;font-weight:600;text-align:center;}
+  .banner-toggle-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .banner-toggle-row button{padding:8px 14px;border-radius:10px;border:1.5px solid var(--line);background:var(--cream);font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink);}
+  .banner-toggle-row button.active{border-color:var(--success);background:rgba(62,207,142,0.15);color:#2f855a;}
+  .login-to-post{background:#efeaff;border-radius:12px;padding:12px;font-size:13px;color:var(--purple-800);text-align:center;margin-bottom:16px;}
+  [data-theme="dark"] .login-to-post{background:#2a2150;}
+
+  .career-input-row{display:flex;gap:8px;margin-bottom:14px;}
+  .career-input-row input{flex:1;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);font-size:15px;background:var(--cream);color:var(--ink);outline:none;}
+  .career-input-row input:focus{border-color:var(--purple-500);}
+  .career-input-row button{padding:0 18px;border-radius:12px;border:none;background:var(--purple-600);color:#fff;font-weight:700;font-size:14px;cursor:pointer;}
+  .career-input-row button[disabled]{opacity:0.5;}
+  .career-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .career-result{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:14px;font-size:14px;line-height:1.6;white-space:pre-wrap;color:var(--ink);}
+  .career-loading{text-align:center;color:var(--ink-soft);font-size:13.5px;padding:20px 0;font-style:italic;}
+  .mb-track{height:7px;border-radius:6px;background:var(--line);overflow:hidden;}
+  .mb-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));border-radius:6px;transition:width .3s;}
+
+  .subject-row{display:flex;gap:8px;overflow-x:auto;padding:14px 16px 8px;-webkit-overflow-scrolling:touch;}
+  .subject-row::-webkit-scrollbar{display:none;}
+  .subject-chip{
+    flex:0 0 auto;padding:9px 14px;border-radius:999px;border:1.5px solid var(--line);
+    background:var(--white);font-weight:600;font-size:13.5px;color:var(--ink);cursor:pointer;
+    display:flex;align-items:center;gap:6px;white-space:nowrap;
+  }
+  .subject-chip.active{background:var(--purple-600);border-color:var(--purple-600);color:#fff;}
+
+  .chat-area{flex:1;overflow-y:auto;padding:8px 16px 12px;display:flex;flex-direction:column;gap:12px;}
+  .empty-state{margin:auto;text-align:center;color:var(--ink-soft);padding:20px;max-width:280px;}
+  .empty-state .emoji{font-size:38px;display:block;margin-bottom:10px;}
+  .empty-state h3{margin:0 0 6px;color:var(--purple-900);font-size:18px;}
+  .empty-state p{margin:0;font-size:13.5px;line-height:1.5;}
+
+  .msg{max-width:86%;padding:11px 14px;border-radius:16px;font-size:14.5px;line-height:1.5;white-space:pre-wrap;}
+  .msg.user{align-self:flex-end;background:var(--purple-600);color:#fff;border-bottom-right-radius:5px;}
+  .msg.ai{align-self:flex-start;background:var(--white);border:1px solid var(--line);border-bottom-left-radius:5px;}
+  .msg.ai.thinking{color:var(--ink-soft);font-style:italic;}
+  .msg.system-note{align-self:center;background:transparent;color:var(--ink-soft);font-size:12.5px;text-align:center;padding:2px 8px;}
+
+  .bonus-prompt{align-self:flex-start;max-width:86%;background:var(--white);border:1.5px dashed var(--amber);border-radius:16px;padding:12px 14px;}
+  .bonus-prompt p{margin:0 0 10px;font-size:14px;}
+  .bonus-actions{display:flex;gap:8px;}
+  .bonus-actions button{flex:1;padding:9px;border-radius:10px;border:none;font-weight:700;font-size:13.5px;cursor:pointer;}
+  .bonus-yes{background:var(--amber);color:#5a3c00;}
+  .bonus-no{background:var(--line);color:var(--ink-soft);}
+
+  .composer{display:flex;gap:8px;padding:10px 12px;background:var(--white);border-top:1px solid var(--line);position:sticky;bottom:0;}
+  .composer textarea{
+    flex:1;resize:none;border:1.5px solid var(--line);border-radius:14px;
+    padding:11px 13px;font-size:15px;max-height:110px;outline:none;background:var(--cream);color:var(--ink);
+  }
+  .composer textarea:focus{border-color:var(--purple-500);}
+  .icon-round-btn{
+    width:46px;height:46px;border-radius:14px;border:none;background:var(--cream);
+    color:var(--purple-700);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+    flex:0 0 46px;border:1.5px solid var(--line);
+  }
+  .send-btn{background:var(--purple-600);color:#fff;border:none;}
+  .send-btn[disabled]{opacity:0.5;}
+
+  .modal-backdrop{position:fixed;inset:0;background:rgba(28,23,48,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:50;}
+  .modal-backdrop.hidden{display:none;}
+  .modal-sheet{background:var(--white);width:100%;max-width:480px;border-radius:22px 22px 0 0;padding:22px 20px 30px;max-height:85vh;overflow-y:auto;}
+  .modal-sheet h2{margin:0 0 4px;font-size:20px;color:var(--purple-900);}
+  .modal-sheet .sub{color:var(--ink-soft);font-size:13px;margin:0 0 18px;}
+  .modal-close-row{display:flex;justify-content:flex-end;}
+  .modal-close-row button{background:none;border:none;font-size:22px;color:var(--ink-soft);cursor:pointer;}
+  .help-note{background:var(--cream);border-radius:12px;padding:10px 12px;font-size:12.5px;color:var(--purple-800);line-height:1.5;margin-top:4px;}
+  .help-note a{color:var(--purple-700);}
+  .theme-toggle-row{display:flex;gap:8px;}
+  .theme-toggle-row button{
+    flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--line);background:var(--cream);
+    font-weight:700;font-size:14px;cursor:pointer;color:var(--ink);
+  }
+  .theme-toggle-row button.active{border-color:var(--purple-600);background:var(--purple-600);color:#fff;}
+  .school-row{display:flex;gap:8px;}
+  .school-row button{
+    flex:1;padding:10px 6px;border-radius:12px;border:1.5px solid var(--line);background:var(--cream);
+    font-weight:600;font-size:12.5px;cursor:pointer;color:var(--ink);
+  }
+  .school-row button.active{border-color:var(--purple-600);background:var(--purple-600);color:#fff;}
+
+  .mode-option{width:100%;text-align:left;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:var(--cream);margin-bottom:10px;cursor:pointer;}
+  .mode-option.active{border-color:var(--purple-600);background:#efeaff;}
+  [data-theme="dark"] .mode-option.active{background:#2a2150;}
+  .mode-option .mo-title{font-weight:800;font-size:15px;color:var(--purple-900);margin-bottom:2px;}
+  .mode-option .mo-desc{font-size:12.5px;color:var(--ink-soft);}
+  .mode-row-settings{display:flex;gap:8px;}
+  .mode-row-settings button{flex:1;padding:10px 6px;border-radius:12px;border:1.5px solid var(--line);background:var(--cream);font-weight:600;font-size:12.5px;cursor:pointer;color:var(--ink);}
+  .mode-row-settings button.active{border-color:var(--purple-600);background:var(--purple-600);color:#fff;}
+
+  .hidden{display:none !important;}
+  #photoInput{display:none;}
+
+  @media (min-width:640px){
+    .auth-wrap{align-items:center;}
+    .card{width:100%;max-width:400px;margin:0 auto;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="mark" id="topbarMark">🧠</div>
+      <div class="brand-text">YouthEdge</div>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="themeQuickToggle" title="Toggle theme">🌙</button>
+      <button class="icon-btn" id="hamburgerBtn" title="Menu">☰</button>
+      <button class="icon-btn" id="settingsBtn" title="Settings">⚙️</button>
+      <button class="icon-btn hidden" id="logoutBtn" title="Log out">↩</button>
+    </div>
+  </div>
+
+  <div class="announce-banner hidden" id="announceBanner"></div>
+
+
+  <div class="auth-wrap" id="authScreen">
+    <div class="auth-hero">
+      <span class="emoji">📚</span>
+      <h1 id="t_authHeadline">Ready to learn?</h1>
+      <p id="t_authSub">I won't give you the answer — I'll walk you through it step by step.</p>
+    </div>
+    <div class="card">
+      <div class="auth-toggle-row">
+        <button id="tabLogin" class="active" data-t="login">Log In</button>
+        <button id="tabSignup" data-t="signup">Sign Up</button>
+      </div>
+      <div id="authError" class="auth-error hidden"></div>
+      <div class="field">
+        <label data-t="email">Email</label>
+        <input type="email" id="authEmail" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label data-t="password">Password</label>
+        <input type="password" id="authPassword" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div style="text-align:right;margin:-6px 0 14px;">
+        <button id="forgotPasswordBtn" style="background:none;border:none;color:var(--purple-700);font-size:12.5px;font-weight:600;cursor:pointer;padding:0;" data-t="forgotPassword">Forgot password?</button>
+      </div>
+      <button class="btn btn-primary" id="authSubmit" data-t="loginBtn">Log In 🚀</button>
+      <div class="or-row"><div class="line"></div><span data-t="or">or</span><div class="line"></div></div>
+      <div class="stack-gap">
+        <button class="btn btn-ghost" id="googleSignInBtn">🔵 <span data-t="continueGoogle">Continue with Google</span></button>
+        <button class="btn btn-ghost" id="appleSignInBtn">🍎 <span data-t="continueApple">Continue with Apple</span></button>
+      </div>
+      <div class="or-row"><div class="line"></div><span data-t="or">or</span><div class="line"></div></div>
+      <button class="btn btn-ghost" id="guestBtn" data-t="guestBtn">👤 Continue as Guest</button>
+    </div>
+  </div>
+
+  <div class="main hidden" id="mainScreen">
+    <div class="stats-row">
+      <div class="stat-pill"><div class="num" id="statSessions">0</div><div class="lbl" data-t="sessions">Sessions</div></div>
+      <div class="stat-pill points"><div class="num" id="statPoints">0</div><div class="lbl" data-t="points">Points</div></div>
+      <div class="stat-pill streak"><div class="num" id="statStreak">0🔥</div><div class="lbl" data-t="streak">Streak</div></div>
+    </div>
+
+    <div class="membership-bar" id="membershipBar">
+      <div class="mb-top"><span id="mbLabel">🏆 0 / 3000</span><span data-t="membership">Membership</span></div>
+      <div class="mb-track"><div class="mb-fill" id="mbFill" style="width:0%"></div></div>
+    </div>
+
+    <div class="coin-chip" id="coinChip">
+      <span>🪙 <span id="coinCount">0</span></span>
+      <span class="cc-right" data-t="openShop">Tap to open Shop →</span>
+    </div>
+
+    <div class="subject-row" id="subjectRow">
+      <button class="subject-chip active" data-subject="Math">📐 <span data-t="subj_Math">Math</span></button>
+      <button class="subject-chip" data-subject="Science">🔬 <span data-t="subj_Science">Science</span></button>
+      <button class="subject-chip" data-subject="English">📖 <span data-t="subj_English">English</span></button>
+      <button class="subject-chip" data-subject="History">🌍 <span data-t="subj_History">History</span></button>
+      <button class="subject-chip" data-subject="Geography">🗺️ <span data-t="subj_Geography">Geography</span></button>
+      <button class="subject-chip" data-subject="Coding">💻 <span data-t="subj_Coding">Coding</span></button>
+      <button class="subject-chip" data-subject="Other">💡 <span data-t="subj_Other">Other</span></button>
+    </div>
+
+    <div class="topic-banner hidden" id="topicBanner">
+      <div><div class="tb-title" id="tbTitle"></div><div class="tb-progress" id="tbProgress"></div></div>
+      <button id="exitPathBtn" data-t="exitPath">Exit Path</button>
+    </div>
+
+    <div class="chat-area" id="chatArea">
+      <div class="empty-state" id="emptyState">
+        <span class="emoji">🧠</span>
+        <h3 data-t="emptyTitle">Pick a subject and paste your homework question</h3>
+        <p data-t="emptyBody">I'll guide you with questions and hints so you actually learn it — not just copy an answer.</p>
+      </div>
+    </div>
+
+    <div class="composer">
+      <button class="icon-round-btn" id="photoBtn" title="Upload photo">📷</button>
+      <input type="file" id="photoInput" accept="image/*">
+      <textarea id="msgInput" rows="1" data-t-ph="typePlaceholder" placeholder="Type your question..."></textarea>
+      <button class="icon-round-btn send-btn" id="sendBtn">➤</button>
+    </div>
+  </div>
+
+  <div class="main hidden" id="adminScreen">
+    <div class="admin-dash-wrap">
+      <h1 class="admin-dash-title">🛠️ Admin Dashboard</h1>
+      <p class="admin-dash-sub">Changes here apply to the app for everyone.</p>
+
+      <div class="admin-card">
+        <h3>🎨 Appearance</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin:0 0 8px;">Accent color</p>
+        <div class="color-preset-grid" id="dashColorGrid"></div>
+        <div class="custom-color-row">
+          <input type="color" id="dashCustomColorInput" value="#5B3EFF">
+          <span style="font-size:13px;color:var(--ink-soft);">Custom accent color</span>
+        </div>
+        <button class="btn btn-primary" id="dashApplyColorBtn">Apply Accent Color</button>
+
+        <p style="font-size:12px;color:var(--ink-soft);margin:18px 0 8px;">Text color</p>
+        <div class="custom-color-row">
+          <input type="color" id="dashTextColorInput" value="#1c1730">
+          <span style="font-size:13px;color:var(--ink-soft);">Main text color</span>
+        </div>
+        <button class="btn btn-primary" id="dashApplyTextColorBtn">Apply Text Color</button>
+
+        <p style="font-size:12px;color:var(--ink-soft);margin:18px 0 8px;">Card / box color</p>
+        <div class="custom-color-row">
+          <input type="color" id="dashBoxColorInput" value="#ffffff">
+          <span style="font-size:13px;color:var(--ink-soft);">Cards & panels background</span>
+        </div>
+        <button class="btn btn-primary" id="dashApplyBoxColorBtn">Apply Box Color</button>
+        <button class="btn btn-ghost" id="dashResetAllBtn" style="margin-top:10px;">Reset All to Default</button>
+        <div class="admin-save-note" id="dashSaveNote"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>🔤 Font Style</h3>
+        <div class="font-option-row" id="dashFontRow"></div>
+      </div>
+
+      <div class="admin-card">
+        <h3>🔠 Text Size</h3>
+        <div class="theme-toggle-row" id="dashTextSizeRow">
+          <button data-size="small">Small</button>
+          <button data-size="medium">Medium</button>
+          <button data-size="large">Large</button>
+        </div>
+      </div>
+
+      <div class="admin-card">
+        <h3>📣 Announcement Banner</h3>
+        <p style="font-size:12px;color:var(--ink-soft);margin:0 0 10px;">Shows at the top of the app for everyone.</p>
+        <input type="text" id="bannerTextInput" placeholder="e.g. 🎉 New: Quiz mode is live!" style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--cream);color:var(--ink);font-size:13.5px;margin-bottom:10px;">
+        <div class="banner-toggle-row">
+          <button id="bannerOnBtn">Show Banner</button>
+          <button id="bannerOffBtn">Hide Banner</button>
+        </div>
+        <button class="btn btn-primary" id="saveBannerBtn">Save Banner</button>
+      </div>
+
+      <div class="admin-card">
+        <h3>👥 Users</h3>
+        <input type="text" id="userSearchInput" placeholder="Search by email..." style="width:100%;padding:10px 12px;border-radius:10px;border:1.5px solid var(--line);background:var(--cream);color:var(--ink);font-size:13.5px;margin-bottom:12px;">
+        <div id="adminUserList"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="modal-backdrop hidden" id="settingsModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeSettings">✕</button></div>
+    <h2 data-t="settingsTitle">⚙️ Settings</h2>
+
+    <div class="field" style="margin-top:6px;">
+      <label data-t="displayNameLabel">Community Display Name</label>
+      <input type="text" id="displayNameInput" maxlength="24" data-t-ph="displayNamePlaceholder" placeholder="e.g. MathWhiz22">
+    </div>
+
+    <div class="field" style="margin-top:18px;">
+      <label data-t="languageLabel">Language</label>
+      <select id="langSelect">
+        <option value="en">English</option>
+        <option value="ar">العربية (Arabic)</option>
+        <option value="es">Español (Spanish)</option>
+        <option value="fr">Français</option>
+        <option value="zh">中文 (Chinese)</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label data-t="themeLabel">Appearance</label>
+      <div class="theme-toggle-row">
+        <button id="themeLightBtn" data-t="light">☀️ Light</button>
+        <button id="themeDarkBtn" data-t="dark">🌙 Dark</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label data-t="schoolLevelLabel">School Level</label>
+      <div class="school-row">
+        <button class="school-btn" data-level="Primary" data-t="primary">Primary</button>
+        <button class="school-btn" data-level="Middle" data-t="middle">Middle</button>
+        <button class="school-btn" data-level="High" data-t="high">High</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label data-t="answerModeLabel">Answer Mode</label>
+      <div class="mode-row-settings">
+        <button class="mode-btn-settings" data-mode="guided" data-t="modeGuided">Guide Me</button>
+        <button class="mode-btn-settings" data-mode="direct" data-t="modeDirect">Give Answers</button>
+      </div>
+    </div>
+
+    <div class="stack-gap" style="margin-top:18px;">
+      <button class="btn btn-primary" id="saveKeyBtn" data-t="saveSettings">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="modeModal">
+  <div class="modal-sheet">
+    <h2 data-t="modeTitle">How do you want to learn today?</h2>
+    <p class="sub" data-t="modeSub">You can change this anytime in Settings.</p>
+    <button class="mode-option" id="modeGuidedOption" data-mode="guided">
+      <div class="mo-title" data-t="modeGuided">🧭 Guide Me</div>
+      <div class="mo-desc" data-t="modeGuidedDesc">Step-by-step hints — I figure it out myself.</div>
+    </button>
+    <button class="mode-option" id="modeDirectOption" data-mode="direct">
+      <div class="mo-title" data-t="modeDirect">⚡ Give Answers</div>
+      <div class="mo-desc" data-t="modeDirectDesc">I'm in a hurry — just show me the answer.</div>
+    </button>
+    <button class="btn btn-primary" id="modeContinueBtn" style="margin-top:6px;" data-t="continueBtn">Continue</button>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="mainMenuModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeMainMenu">✕</button></div>
+    <h2 data-t="menuTitle">Menu</h2>
+    <div class="menu-item" id="menuShopItem"><span class="mi-emoji">🛍️</span><span class="mi-label" data-t="menuShop">Reward Store</span></div>
+    <div class="menu-item" id="menuPathItem"><span class="mi-emoji">🗺️</span><span class="mi-label" data-t="menuPath">Learning Path</span></div>
+    <div class="menu-item" id="menuCommunityItem"><span class="mi-emoji">👥</span><span class="mi-label" data-t="menuCommunity">Community</span></div>
+    <div class="menu-item" id="menuCareerItem"><span class="mi-emoji">🎯</span><span class="mi-label" data-t="menuCareer">Career Advisor</span></div>
+    <div class="menu-item" id="menuQuizItem"><span class="mi-emoji">📝</span><span class="mi-label" data-t="menuQuiz">Quiz</span></div>
+    <div class="menu-item" id="menuInterviewItem"><span class="mi-emoji">🎤</span><span class="mi-label" data-t="menuInterview">Interview Simulator</span></div>
+    <div class="menu-item hidden" id="menuAdminItem"><span class="mi-emoji">🛠️</span><span class="mi-label">Admin</span></div>
+
+    <div class="profile-footer">
+      <div class="pf-avatar" id="pfAvatar">🧠</div>
+      <div class="pf-info">
+        <div class="pf-email" id="pfEmail"></div>
+        <div class="pf-points" id="pfPoints"></div>
+      </div>
+      <button class="pf-edit" id="pfEditBtn" title="Edit">✏️</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="membershipModal">
+  <div class="modal-sheet" style="text-align:center;">
+    <div class="modal-close-row"><button id="closeMembership">✕</button></div>
+    <div style="font-size:44px;margin-bottom:6px;">🏆</div>
+    <h2 data-t="membershipTitle">Membership</h2>
+    <p class="sub" id="membershipText" data-t="membershipComingSoon">Membership perks are coming soon! Keep collecting points.</p>
+    <button class="btn btn-primary" id="closeMembership2" data-t="gotIt">Got it</button>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="shopModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeShop">✕</button></div>
+    <h2 data-t="shopTitle">🛍️ Shop</h2>
+    <p class="sub" data-t="shopSub">Spend coins earned from correct answers on fun extras.</p>
+    <div class="coin-balance-row">🪙 <span id="shopCoinBalance">0</span></div>
+
+    <div class="shop-section">
+      <h3 data-t="catAvatar">Avatar</h3>
+      <div class="shop-grid" id="avatarShopGrid"></div>
+    </div>
+
+    <div class="shop-section">
+      <h3 data-t="catColor">Icon Color</h3>
+      <div class="shop-grid" id="colorShopGrid"></div>
+    </div>
+
+    <div class="shop-section">
+      <h3 data-t="catPerks">Perks</h3>
+      <div class="perk-card">
+        <div class="perk-emoji">🛡️</div>
+        <div class="perk-info">
+          <div class="pi-title" data-t="streakFreezeName">Streak Freeze</div>
+          <div class="pi-desc" data-t="streakFreezeDesc">Saves your streak if you miss a day.</div>
+        </div>
+        <span class="perk-count" id="freezeCount">x0</span>
+        <button class="perk-buy-btn" id="buyFreezeBtn">Buy · 50</button>
+      </div>
+      <div class="perk-card">
+        <div class="perk-emoji">⚡</div>
+        <div class="perk-info">
+          <div class="pi-title" data-t="doubleBoostName">Double Boost</div>
+          <div class="pi-desc" data-t="doubleBoostDesc">Doubles coins/points for your next 3 correct answers.</div>
+        </div>
+        <span class="perk-count" id="boostCount">x0</span>
+        <button class="perk-buy-btn" id="buyBoostBtn">Buy · 40</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="pathModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closePath">✕</button></div>
+    <h2 data-t="pathTitle">🗺️ Learning Path</h2>
+    <p class="sub" data-t="pathSub">Complete topics in order to unlock the next one.</p>
+    <div id="pathNodeList"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="communityModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeCommunity">✕</button></div>
+    <h2 data-t="communityTitle">👥 Community</h2>
+    <p class="sub" data-t="communitySub">Share wins and ideas with other learners.</p>
+
+    <div id="composeArea"></div>
+
+    <div id="feedList"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="careerModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeCareer">✕</button></div>
+    <h2 data-t="careerTitle">🎯 Career Advisor</h2>
+    <p class="sub" data-t="careerSub">Tell me what you want to become, and I'll map out the subjects, classes, and steps to get there.</p>
+    <div class="career-input-row">
+      <input type="text" id="careerInput" data-t-ph="careerInputPlaceholder" placeholder="e.g. Engineer, Doctor, Game Designer...">
+      <button id="careerAskBtn" data-t="careerAskBtn">Go</button>
+    </div>
+    <div class="career-chips" id="careerChips"></div>
+    <div id="careerResultArea"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="adminModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeAdmin">✕</button></div>
+    <h2>🛠️ Admin — App Color</h2>
+    <p class="sub">Changes apply to the app for everyone, instantly.</p>
+    <div class="color-preset-grid" id="colorPresetGrid"></div>
+    <div class="custom-color-row">
+      <input type="color" id="customColorInput" value="#5B3EFF">
+      <span style="font-size:13px;color:var(--ink-soft);">Or pick any custom color</span>
+    </div>
+    <button class="btn btn-primary" id="applyColorBtn">Apply to App</button>
+    <button class="btn btn-ghost" id="resetColorBtn" style="margin-top:10px;">Reset to Default Purple</button>
+    <div class="admin-save-note" id="adminSaveNote"></div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="quizModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeQuiz">✕</button></div>
+    <h2 data-t="quizTitle">📝 Quiz</h2>
+    <p class="sub" data-t="quizSub">Pick your grade level and a class to start practicing.</p>
+
+    <div id="quizLevelPicker">
+      <div class="quiz-level-tabs" id="quizLevelTabs"></div>
+      <div class="quiz-class-grid" id="quizClassGrid"></div>
+    </div>
+
+    <div id="quizPlayArea" class="hidden">
+      <div class="quiz-score-row">
+        <span id="quizClassLabel"></span>
+        <span>
+          <span id="quizScoreLabel"></span>
+          <button id="quizBackBtn" data-t="backToClassesBtn">← Change class</button>
+        </span>
+      </div>
+      <div id="quizQuestionArea"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop hidden" id="interviewModal">
+  <div class="modal-sheet">
+    <div class="modal-close-row"><button id="closeInterview">✕</button></div>
+    <h2 data-t="interviewTitle">🎤 Interview Simulator</h2>
+
+    <div id="interviewSetup">
+      <p class="sub" data-t="interviewSub">Tell me what the interview is about, and I'll play the interviewer — talk or type your answers.</p>
+      <div class="career-input-row">
+        <input type="text" id="interviewTopicInput" data-t-ph="interviewTopicPlaceholder" placeholder="e.g. Software Engineer job interview">
+        <button id="interviewStartBtn" data-t="startInterviewBtn">Start</button>
+      </div>
+      <div class="interview-setup-chips" id="interviewChips"></div>
+    </div>
+
+    <div id="interviewChatWrap" class="hidden">
+      <div class="interview-top-row">
+        <span id="interviewTopicLabel" style="font-weight:700;font-size:13px;color:var(--purple-800);"></span>
+        <div>
+          <button id="muteToggleBtn">🔊</button>
+          <button id="endInterviewBtn" data-t="endInterviewBtn">End</button>
+        </div>
+      </div>
+      <div class="interview-chat-area" id="interviewChatArea"></div>
+      <div class="interview-status" id="interviewStatus"></div>
+      <div class="interview-composer">
+        <button class="mic-btn" id="micBtn">🎤</button>
+        <input type="text" id="interviewTextInput" data-t-ph="typePlaceholder" placeholder="Type your question...">
+        <button class="icon-round-btn send-btn" id="interviewSendBtn">➤</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+import {
+  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut, GoogleAuthProvider, OAuthProvider,
+  signInWithPopup, signInWithRedirect, getRedirectResult, sendPasswordResetEmail
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+import {
+  getFirestore, doc, getDoc, setDoc, collection, addDoc, query, orderBy, where, limit, getDocs, updateDoc, increment, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAjp50WcxRT2AzSPPsoCMNyV5TKT6IQJsE",
+  authDomain: "youthedge-web.firebaseapp.com",
+  projectId: "youthedge-web",
+  storageBucket: "youthedge-web.firebasestorage.app",
+  messagingSenderId: "500840063144",
+  appId: "1:500840063144:web:554243994a62209d34a29d"
+};
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+/* ---------------- i18n ---------------- */
+const STR = {
+  en:{login:"Log In",signup:"Sign Up",email:"Email",password:"Password",loginBtn:"Log In 🚀",signupBtn:"Create Account ✨",or:"or",guestBtn:"👤 Continue as Guest",
+    authHeadline:"Ready to learn?",authSub:"I won't give you the answer — I'll walk you through it step by step.",
+    sessions:"Sessions",points:"Points",streak:"Streak",membership:"Membership",
+    subj_Math:"Math",subj_Science:"Science",subj_English:"English",subj_History:"History",subj_Geography:"Geography",subj_Coding:"Coding",subj_Other:"Other",
+    emptyTitle:"Pick a subject and paste your homework question",emptyBody:"I'll guide you with questions and hints so you actually learn it — not just copy an answer.",
+    typePlaceholder:"Type your question...",settingsTitle:"⚙️ Settings",settingsSub:"Your AI tutor needs a Groq API key to work. It's stored only on this device.",
+    groqKeyLabel:"Groq API Key",languageLabel:"Language",themeLabel:"Appearance",light:"☀️ Light",dark:"🌙 Dark",
+    schoolLevelLabel:"School Level",primary:"Primary",middle:"Middle",high:"High",saveSettings:"Save Settings",
+    membershipTitle:"Membership",membershipComingSoon:"Membership perks are coming soon! Keep collecting points.",gotIt:"Got it",
+    bonusOffer:"Nice work! 🎉 +{pts} point. Want a bonus question for +5 points?",bonusYes:"Yes, bonus! ✨",bonusNo:"No thanks",
+    membershipUnlockedNote:"🏆 You've unlocked Membership! (feature coming soon)",
+    forgotPassword:"Forgot password?",continueGoogle:"Continue with Google",continueApple:"Continue with Apple",
+    resetEmailPromptTitle:"Enter your email to reset your password:",resetEmailSent:"Password reset email sent — check your inbox.",
+    resetEmailError:"Couldn't send reset email — check the address and try again.",enterEmailFirst:"Please enter an email address.",
+    answerModeLabel:"Answer Mode",modeTitle:"How do you want to learn today?",modeSub:"You can change this anytime in Settings.",
+    modeGuided:"Guide Me",modeGuidedDesc:"Step-by-step hints — I figure it out myself.",
+    modeDirect:"Give Answers",modeDirectDesc:"I'm in a hurry — just show me the answer.",continueBtn:"Continue",
+    openShop:"Tap to open Shop →",shopTitle:"🛍️ Shop",shopSub:"Spend coins earned from correct answers on fun extras.",
+    catAvatar:"Avatar",catColor:"Icon Color",catPerks:"Perks",buyBtn:"Buy",selectBtn:"Select",ownedLabel:"Owned",selectedLabel:"Selected",
+    streakFreezeName:"Streak Freeze",streakFreezeDesc:"Saves your streak if you miss a day.",
+    doubleBoostName:"Double Boost",doubleBoostDesc:"Doubles coins/points for your next 3 correct answers.",
+    notEnoughCoins:"Not enough coins yet!",purchased:"Purchased! 🎉",
+    pathTitle:"🗺️ Learning Path",pathSub:"Complete topics in order to unlock the next one.",
+    topicLocked:"Locked",topicDone:"Completed",topicCurrent:"In Progress",topicStart:"Start",
+    exitPath:"Exit Path",topicCompleteMsg:"🎉 Topic complete! +10 bonus points!",
+    correctCount:"Correct: {n}/3",
+    displayNameLabel:"Community Display Name",displayNamePlaceholder:"e.g. MathWhiz22",
+    communityTitle:"👥 Community",communitySub:"Share wins and ideas with other learners.",
+    shareBtn:"Post",loginToPost:"Log in (not Guest) to post to the community.",
+    noPostsYet:"No posts yet — be the first to share!",reportBtn:"Report",reportedBtn:"Reported",likeBtn:"Like",
+    achvStreak:"🔥 I'm on a {n}-day streak on YouthEdge!",achvPoints:"🎉 I just hit {n} points!",achvTopic:"✅ I just completed a topic on my Learning Path!",
+    composePlaceholder:"Share an idea or achievement...",justNow:"just now",
+    careerTitle:"🎯 Career Advisor",careerSub:"Tell me what you want to become, and I'll map out the subjects, classes, and steps to get there.",
+    careerInputPlaceholder:"e.g. Engineer, Doctor, Game Designer...",careerAskBtn:"Go",careerLoading:"Building your roadmap…",
+    careerTryOne:"Try: ",replyBtn:"Reply",replyPlaceholder:"Write a reply...",
+    interviewTitle:"🎤 Interview Simulator",interviewSub:"Tell me what the interview is about, and I'll play the interviewer — talk or type your answers.",
+    interviewTopicPlaceholder:"e.g. Software Engineer job interview",startInterviewBtn:"Start",endInterviewBtn:"End",
+    interviewListening:"Listening…",interviewTranscribing:"Transcribing…",interviewThinking:"Thinking…",
+    micPermissionDenied:"Microphone access is needed for voice answers.",
+    menuTitle:"Menu",menuShop:"Reward Store",menuPath:"Learning Path",menuCommunity:"Community",menuCareer:"Career Advisor",menuInterview:"Interview Simulator",menuQuiz:"Quiz",guestLabel:"Guest",
+    quizTitle:"📝 Quiz",quizSub:"Pick your grade level and a class to start practicing.",
+    levelPrimaryQuiz:"Primary (Gr 1-5)",levelMiddleQuiz:"Middle (Gr 6-8)",levelHighQuiz:"High / Uni / Jobs",
+    backToClassesBtn:"← Change class",quizLoading:"Building your question…",nextQuestionBtn:"Next Question →",quizScoreFmt:"Score: {c}/{t}"},
+  ar:{login:"تسجيل الدخول",signup:"إنشاء حساب",email:"البريد الإلكتروني",password:"كلمة المرور",loginBtn:"تسجيل الدخول 🚀",signupBtn:"إنشاء حساب ✨",or:"أو",guestBtn:"👤 المتابعة كضيف",
+    authHeadline:"هل أنت مستعد للتعلم؟",authSub:"لن أعطيك الإجابة مباشرة — سأرشدك خطوة بخطوة.",
+    sessions:"الجلسات",points:"النقاط",streak:"التتابع",membership:"العضوية",
+    subj_Math:"الرياضيات",subj_Science:"العلوم",subj_English:"الإنجليزية",subj_History:"التاريخ",subj_Geography:"الجغرافيا",subj_Coding:"البرمجة",subj_Other:"أخرى",
+    emptyTitle:"اختر مادة والصق سؤال الواجب",emptyBody:"سأرشدك بأسئلة وتلميحات لتتعلم فعليًا — لا مجرد نسخ الإجابة.",
+    typePlaceholder:"اكتب سؤالك...",settingsTitle:"⚙️ الإعدادات",settingsSub:"يحتاج المعلم الذكي مفتاح Groq API للعمل. يُحفظ على جهازك فقط.",
+    groqKeyLabel:"مفتاح Groq API",languageLabel:"اللغة",themeLabel:"المظهر",light:"☀️ فاتح",dark:"🌙 داكن",
+    schoolLevelLabel:"المرحلة الدراسية",primary:"ابتدائي",middle:"متوسط",high:"ثانوي",saveSettings:"حفظ الإعدادات",
+    membershipTitle:"العضوية",membershipComingSoon:"مزايا العضوية قريبًا! استمر بجمع النقاط.",gotIt:"حسنًا",
+    bonusOffer:"أحسنت! 🎉 +{pts} نقطة. هل تريد سؤالاً إضافيًا مقابل +5 نقاط؟",bonusYes:"نعم! ✨",bonusNo:"لا شكرًا",
+    membershipUnlockedNote:"🏆 لقد فتحت العضوية! (الميزة قريبًا)",
+    forgotPassword:"نسيت كلمة المرور؟",continueGoogle:"المتابعة باستخدام Google",continueApple:"المتابعة باستخدام Apple",
+    resetEmailPromptTitle:"أدخل بريدك الإلكتروني لإعادة تعيين كلمة المرور:",resetEmailSent:"تم إرسال بريد إعادة التعيين — تحقق من صندوق الوارد.",
+    resetEmailError:"تعذر إرسال البريد — تحقق من العنوان وحاول مرة أخرى.",enterEmailFirst:"يرجى إدخال بريد إلكتروني.",
+    answerModeLabel:"وضع الإجابة",modeTitle:"كيف تريد أن تتعلم اليوم؟",modeSub:"يمكنك تغيير هذا في أي وقت من الإعدادات.",
+    modeGuided:"وجّهني",modeGuidedDesc:"تلميحات خطوة بخطوة — أكتشف الحل بنفسي.",
+    modeDirect:"أعطني الإجابات",modeDirectDesc:"أنا مستعجل — أرني الإجابة مباشرة.",continueBtn:"متابعة",
+    openShop:"اضغط لفتح المتجر ←",shopTitle:"🛍️ المتجر",shopSub:"أنفق العملات التي كسبتها من الإجابات الصحيحة على إضافات ممتعة.",
+    catAvatar:"الصورة الرمزية",catColor:"لون الأيقونة",catPerks:"المزايا",buyBtn:"شراء",selectBtn:"اختيار",ownedLabel:"مملوك",selectedLabel:"مُختار",
+    streakFreezeName:"تجميد التتابع",streakFreezeDesc:"يحافظ على تتابعك إذا فاتك يوم.",
+    doubleBoostName:"دفعة مضاعفة",doubleBoostDesc:"يضاعف العملات والنقاط لأول 3 إجابات صحيحة قادمة.",
+    notEnoughCoins:"لا توجد عملات كافية بعد!",purchased:"تم الشراء! 🎉",
+    pathTitle:"🗺️ مسار التعلم",pathSub:"أكمل المواضيع بالترتيب لفتح التالي.",
+    topicLocked:"مغلق",topicDone:"مكتمل",topicCurrent:"قيد التقدم",topicStart:"ابدأ",
+    exitPath:"الخروج من المسار",topicCompleteMsg:"🎉 اكتمل الموضوع! +10 نقاط إضافية!",
+    correctCount:"صحيح: {n}/3",
+    displayNameLabel:"اسم العرض في المجتمع",displayNamePlaceholder:"مثال: بطل_الرياضيات",
+    communityTitle:"👥 المجتمع",communitySub:"شارك إنجازاتك وأفكارك مع متعلمين آخرين.",
+    shareBtn:"نشر",loginToPost:"سجّل الدخول (وليس كضيف) للنشر في المجتمع.",
+    noPostsYet:"لا توجد منشورات بعد — كن أول من يشارك!",reportBtn:"إبلاغ",reportedBtn:"تم الإبلاغ",likeBtn:"إعجاب",
+    achvStreak:"🔥 لديّ تتابع {n} يوم في YouthEdge!",achvPoints:"🎉 وصلت للتو إلى {n} نقطة!",achvTopic:"✅ أكملت للتو موضوعًا في مسار التعلم!",
+    composePlaceholder:"شارك فكرة أو إنجازًا...",justNow:"الآن",
+    careerTitle:"🎯 مستشار المسار المهني",careerSub:"أخبرني بما تريد أن تصبح، وسأرسم لك المواد والحصص والخطوات للوصول إلى هناك.",
+    careerInputPlaceholder:"مثال: مهندس، طبيب، مصمم ألعاب...",careerAskBtn:"ابدأ",careerLoading:"جارٍ إعداد خطتك…",
+    careerTryOne:"جرّب: ",replyBtn:"رد",replyPlaceholder:"اكتب ردًا...",
+    interviewTitle:"🎤 محاكي المقابلة",interviewSub:"أخبرني عن موضوع المقابلة، وسأكون أنا المُقابِل — تحدث أو اكتب إجاباتك.",
+    interviewTopicPlaceholder:"مثال: مقابلة وظيفة مهندس برمجيات",startInterviewBtn:"ابدأ",endInterviewBtn:"إنهاء",
+    interviewListening:"يستمع…",interviewTranscribing:"جارٍ التفريغ…",interviewThinking:"يفكّر…",
+    micPermissionDenied:"يلزم الوصول إلى الميكروفون للإجابات الصوتية.",
+    menuTitle:"القائمة",menuShop:"متجر المكافآت",menuPath:"مسار التعلم",menuCommunity:"المجتمع",menuCareer:"مستشار المسار المهني",menuInterview:"محاكي المقابلة",menuQuiz:"اختبار",guestLabel:"ضيف",
+    quizTitle:"📝 اختبار",quizSub:"اختر صفك الدراسي ومادة لبدء التدريب.",
+    levelPrimaryQuiz:"ابتدائي (1-5)",levelMiddleQuiz:"متوسط (6-8)",levelHighQuiz:"ثانوي / جامعة / وظائف",
+    backToClassesBtn:"← تغيير المادة",quizLoading:"جارٍ إعداد السؤال…",nextQuestionBtn:"السؤال التالي ←",quizScoreFmt:"النتيجة: {c}/{t}"},
+  es:{login:"Iniciar sesión",signup:"Registrarse",email:"Correo",password:"Contraseña",loginBtn:"Iniciar sesión 🚀",signupBtn:"Crear cuenta ✨",or:"o",guestBtn:"👤 Continuar como invitado",
+    authHeadline:"¿Listo para aprender?",authSub:"No te daré la respuesta — te guiaré paso a paso.",
+    sessions:"Sesiones",points:"Puntos",streak:"Racha",membership:"Membresía",
+    subj_Math:"Matemáticas",subj_Science:"Ciencias",subj_English:"Inglés",subj_History:"Historia",subj_Geography:"Geografía",subj_Coding:"Programación",subj_Other:"Otro",
+    emptyTitle:"Elige una materia y pega tu pregunta de tarea",emptyBody:"Te guiaré con preguntas y pistas para que realmente aprendas.",
+    typePlaceholder:"Escribe tu pregunta...",settingsTitle:"⚙️ Ajustes",settingsSub:"Tu tutor de IA necesita una clave de Groq API. Se guarda solo en este dispositivo.",
+    groqKeyLabel:"Clave de Groq API",languageLabel:"Idioma",themeLabel:"Apariencia",light:"☀️ Claro",dark:"🌙 Oscuro",
+    schoolLevelLabel:"Nivel escolar",primary:"Primaria",middle:"Secundaria",high:"Preparatoria",saveSettings:"Guardar ajustes",
+    membershipTitle:"Membresía",membershipComingSoon:"¡Los beneficios llegarán pronto! Sigue juntando puntos.",gotIt:"Entendido",
+    bonusOffer:"¡Bien hecho! 🎉 +{pts} punto. ¿Quieres una pregunta extra por +5 puntos?",bonusYes:"¡Sí! ✨",bonusNo:"No, gracias",
+    membershipUnlockedNote:"🏆 ¡Desbloqueaste la Membresía! (próximamente)",
+    forgotPassword:"¿Olvidaste tu contraseña?",continueGoogle:"Continuar con Google",continueApple:"Continuar con Apple",
+    resetEmailPromptTitle:"Ingresa tu correo para restablecer tu contraseña:",resetEmailSent:"Correo de restablecimiento enviado — revisa tu bandeja de entrada.",
+    resetEmailError:"No se pudo enviar el correo — verifica la dirección e intenta de nuevo.",enterEmailFirst:"Por favor ingresa un correo electrónico.",
+    answerModeLabel:"Modo de respuesta",modeTitle:"¿Cómo quieres aprender hoy?",modeSub:"Puedes cambiar esto en cualquier momento en Ajustes.",
+    modeGuided:"Guíame",modeGuidedDesc:"Pistas paso a paso — yo lo resuelvo.",
+    modeDirect:"Dame respuestas",modeDirectDesc:"Tengo prisa — muéstrame la respuesta.",continueBtn:"Continuar",
+    openShop:"Toca para abrir la Tienda →",shopTitle:"🛍️ Tienda",shopSub:"Gasta las monedas ganadas por respuestas correctas en extras divertidos.",
+    catAvatar:"Avatar",catColor:"Color del ícono",catPerks:"Ventajas",buyBtn:"Comprar",selectBtn:"Elegir",ownedLabel:"Adquirido",selectedLabel:"Elegido",
+    streakFreezeName:"Congelar racha",streakFreezeDesc:"Protege tu racha si faltas un día.",
+    doubleBoostName:"Impulso doble",doubleBoostDesc:"Duplica monedas/puntos en tus próximas 3 respuestas correctas.",
+    notEnoughCoins:"¡Aún no tienes suficientes monedas!",purchased:"¡Comprado! 🎉",
+    pathTitle:"🗺️ Ruta de aprendizaje",pathSub:"Completa los temas en orden para desbloquear el siguiente.",
+    topicLocked:"Bloqueado",topicDone:"Completado",topicCurrent:"En progreso",topicStart:"Empezar",
+    exitPath:"Salir de la ruta",topicCompleteMsg:"🎉 ¡Tema completado! +10 puntos extra!",
+    correctCount:"Correctas: {n}/3",
+    displayNameLabel:"Nombre en la Comunidad",displayNamePlaceholder:"ej. CraqueDeMates22",
+    communityTitle:"👥 Comunidad",communitySub:"Comparte logros e ideas con otros estudiantes.",
+    shareBtn:"Publicar",loginToPost:"Inicia sesión (no como invitado) para publicar en la comunidad.",
+    noPostsYet:"Aún no hay publicaciones — ¡sé el primero en compartir!",reportBtn:"Reportar",reportedBtn:"Reportado",likeBtn:"Me gusta",
+    achvStreak:"🔥 ¡Llevo una racha de {n} días en YouthEdge!",achvPoints:"🎉 ¡Acabo de llegar a {n} puntos!",achvTopic:"✅ ¡Acabo de completar un tema de mi Ruta de aprendizaje!",
+    composePlaceholder:"Comparte una idea o logro...",justNow:"ahora mismo",
+    careerTitle:"🎯 Asesor de carreras",careerSub:"Dime qué quieres llegar a ser y te trazaré las materias, clases y pasos para lograrlo.",
+    careerInputPlaceholder:"ej. Ingeniero, Médico, Diseñador de juegos...",careerAskBtn:"Ir",careerLoading:"Preparando tu plan…",
+    careerTryOne:"Prueba: ",replyBtn:"Responder",replyPlaceholder:"Escribe una respuesta...",
+    interviewTitle:"🎤 Simulador de entrevista",interviewSub:"Dime de qué trata la entrevista y yo seré el entrevistador — habla o escribe tus respuestas.",
+    interviewTopicPlaceholder:"ej. Entrevista de trabajo de Ingeniero de Software",startInterviewBtn:"Empezar",endInterviewBtn:"Terminar",
+    interviewListening:"Escuchando…",interviewTranscribing:"Transcribiendo…",interviewThinking:"Pensando…",
+    micPermissionDenied:"Se necesita acceso al micrófono para respuestas de voz.",
+    menuTitle:"Menú",menuShop:"Tienda de recompensas",menuPath:"Ruta de aprendizaje",menuCommunity:"Comunidad",menuCareer:"Asesor de carreras",menuInterview:"Simulador de entrevista",menuQuiz:"Cuestionario",guestLabel:"Invitado",
+    quizTitle:"📝 Cuestionario",quizSub:"Elige tu nivel de grado y una materia para empezar a practicar.",
+    levelPrimaryQuiz:"Primaria (1°-5°)",levelMiddleQuiz:"Secundaria (6°-8°)",levelHighQuiz:"Prepa / Uni / Trabajo",
+    backToClassesBtn:"← Cambiar materia",quizLoading:"Preparando tu pregunta…",nextQuestionBtn:"Siguiente pregunta →",quizScoreFmt:"Puntuación: {c}/{t}"},
+  fr:{login:"Connexion",signup:"S'inscrire",email:"E-mail",password:"Mot de passe",loginBtn:"Connexion 🚀",signupBtn:"Créer un compte ✨",or:"ou",guestBtn:"👤 Continuer en invité",
+    authHeadline:"Prêt à apprendre ?",authSub:"Je ne te donnerai pas la réponse — je te guiderai étape par étape.",
+    sessions:"Sessions",points:"Points",streak:"Série",membership:"Adhésion",
+    subj_Math:"Maths",subj_Science:"Sciences",subj_English:"Anglais",subj_History:"Histoire",subj_Geography:"Géographie",subj_Coding:"Programmation",subj_Other:"Autre",
+    emptyTitle:"Choisis une matière et colle ta question de devoir",emptyBody:"Je te guiderai avec des questions et des indices pour que tu apprennes vraiment.",
+    typePlaceholder:"Tape ta question...",settingsTitle:"⚙️ Paramètres",settingsSub:"Ton tuteur IA a besoin d'une clé Groq API. Elle reste sur cet appareil.",
+    groqKeyLabel:"Clé Groq API",languageLabel:"Langue",themeLabel:"Apparence",light:"☀️ Clair",dark:"🌙 Sombre",
+    schoolLevelLabel:"Niveau scolaire",primary:"Primaire",middle:"Collège",high:"Lycée",saveSettings:"Enregistrer",
+    membershipTitle:"Adhésion",membershipComingSoon:"Les avantages arrivent bientôt ! Continue à cumuler des points.",gotIt:"Compris",
+    bonusOffer:"Bien joué ! 🎉 +{pts} point. Une question bonus pour +5 points ?",bonusYes:"Oui ! ✨",bonusNo:"Non merci",
+    membershipUnlockedNote:"🏆 Adhésion débloquée ! (bientôt disponible)",
+    forgotPassword:"Mot de passe oublié ?",continueGoogle:"Continuer avec Google",continueApple:"Continuer avec Apple",
+    resetEmailPromptTitle:"Entre ton e-mail pour réinitialiser ton mot de passe :",resetEmailSent:"E-mail de réinitialisation envoyé — vérifie ta boîte de réception.",
+    resetEmailError:"Impossible d'envoyer l'e-mail — vérifie l'adresse et réessaie.",enterEmailFirst:"Merci d'entrer une adresse e-mail.",
+    answerModeLabel:"Mode de réponse",modeTitle:"Comment veux-tu apprendre aujourd'hui ?",modeSub:"Tu peux changer cela à tout moment dans les Paramètres.",
+    modeGuided:"Guide-moi",modeGuidedDesc:"Indices étape par étape — je trouve moi-même.",
+    modeDirect:"Donne les réponses",modeDirectDesc:"Je suis pressé — montre-moi la réponse.",continueBtn:"Continuer",
+    openShop:"Toucher pour ouvrir la Boutique →",shopTitle:"🛍️ Boutique",shopSub:"Dépense les pièces gagnées grâce aux bonnes réponses sur des extras amusants.",
+    catAvatar:"Avatar",catColor:"Couleur de l'icône",catPerks:"Avantages",buyBtn:"Acheter",selectBtn:"Choisir",ownedLabel:"Possédé",selectedLabel:"Choisi",
+    streakFreezeName:"Gel de série",streakFreezeDesc:"Protège ta série si tu manques un jour.",
+    doubleBoostName:"Boost double",doubleBoostDesc:"Double les pièces/points pour tes 3 prochaines bonnes réponses.",
+    notEnoughCoins:"Pas encore assez de pièces !",purchased:"Acheté ! 🎉",
+    pathTitle:"🗺️ Parcours d'apprentissage",pathSub:"Termine les sujets dans l'ordre pour débloquer le suivant.",
+    topicLocked:"Verrouillé",topicDone:"Terminé",topicCurrent:"En cours",topicStart:"Commencer",
+    exitPath:"Quitter le parcours",topicCompleteMsg:"🎉 Sujet terminé ! +10 points bonus !",
+    correctCount:"Correctes : {n}/3",
+    displayNameLabel:"Nom d'affichage Communauté",displayNamePlaceholder:"ex. GénieDesMaths22",
+    communityTitle:"👥 Communauté",communitySub:"Partage tes réussites et idées avec d'autres élèves.",
+    shareBtn:"Publier",loginToPost:"Connecte-toi (pas en invité) pour publier dans la communauté.",
+    noPostsYet:"Aucune publication pour l'instant — sois le premier à partager !",reportBtn:"Signaler",reportedBtn:"Signalé",likeBtn:"J'aime",
+    achvStreak:"🔥 Je suis à {n} jours de série sur YouthEdge !",achvPoints:"🎉 Je viens d'atteindre {n} points !",achvTopic:"✅ Je viens de terminer un sujet de mon Parcours d'apprentissage !",
+    composePlaceholder:"Partage une idée ou une réussite...",justNow:"à l'instant",
+    careerTitle:"🎯 Conseiller d'orientation",careerSub:"Dis-moi ce que tu veux devenir, et je te trace les matières, les cours et les étapes pour y arriver.",
+    careerInputPlaceholder:"ex. Ingénieur, Médecin, Game designer...",careerAskBtn:"Go",careerLoading:"Préparation de ton parcours…",
+    careerTryOne:"Essaie : ",replyBtn:"Répondre",replyPlaceholder:"Écris une réponse...",
+    interviewTitle:"🎤 Simulateur d'entretien",interviewSub:"Dis-moi de quoi parle l'entretien, et je serai le recruteur — parle ou tape tes réponses.",
+    interviewTopicPlaceholder:"ex. Entretien pour Ingénieur logiciel",startInterviewBtn:"Démarrer",endInterviewBtn:"Terminer",
+    interviewListening:"Écoute…",interviewTranscribing:"Transcription…",interviewThinking:"Réflexion…",
+    micPermissionDenied:"L'accès au micro est nécessaire pour les réponses vocales.",
+    menuTitle:"Menu",menuShop:"Boutique de récompenses",menuPath:"Parcours d'apprentissage",menuCommunity:"Communauté",menuCareer:"Conseiller d'orientation",menuInterview:"Simulateur d'entretien",menuQuiz:"Quiz",guestLabel:"Invité",
+    quizTitle:"📝 Quiz",quizSub:"Choisis ton niveau et une matière pour commencer à t'entraîner.",
+    levelPrimaryQuiz:"Primaire (CP-CM2)",levelMiddleQuiz:"Collège (6e-4e)",levelHighQuiz:"Lycée / Fac / Emploi",
+    backToClassesBtn:"← Changer de matière",quizLoading:"Préparation de ta question…",nextQuestionBtn:"Question suivante →",quizScoreFmt:"Score : {c}/{t}"},
+  zh:{login:"登录",signup:"注册",email:"电子邮箱",password:"密码",loginBtn:"登录 🚀",signupBtn:"创建账户 ✨",or:"或",guestBtn:"👤 以访客身份继续",
+    authHeadline:"准备好学习了吗？",authSub:"我不会直接给你答案——我会一步步引导你。",
+    sessions:"学习次数",points:"积分",streak:"连续天数",membership:"会员",
+    subj_Math:"数学",subj_Science:"科学",subj_English:"英语",subj_History:"历史",subj_Geography:"地理",subj_Coding:"编程",subj_Other:"其他",
+    emptyTitle:"选择一个科目并粘贴你的作业题目",emptyBody:"我会用提问和提示引导你，让你真正学会——而不只是抄答案。",
+    typePlaceholder:"输入你的问题...",settingsTitle:"⚙️ 设置",settingsSub:"你的AI导师需要Groq API密钥才能使用。仅保存在本设备。",
+    groqKeyLabel:"Groq API 密钥",languageLabel:"语言",themeLabel:"外观",light:"☀️ 浅色",dark:"🌙 深色",
+    schoolLevelLabel:"学校阶段",primary:"小学",middle:"初中",high:"高中",saveSettings:"保存设置",
+    membershipTitle:"会员",membershipComingSoon:"会员权益即将推出！继续收集积分吧。",gotIt:"知道了",
+    bonusOffer:"太棒了！🎉 +{pts} 积分。要来一道 +5 积分的奖励题吗？",bonusYes:"好的！✨",bonusNo:"不用了",
+    membershipUnlockedNote:"🏆 你已解锁会员！（功能即将推出）",
+    forgotPassword:"忘记密码？",continueGoogle:"使用 Google 继续",continueApple:"使用 Apple 继续",
+    resetEmailPromptTitle:"输入你的邮箱以重置密码：",resetEmailSent:"重置密码邮件已发送——请查收。",
+    resetEmailError:"无法发送邮件——请检查地址后重试。",enterEmailFirst:"请输入邮箱地址。",
+    answerModeLabel:"答题模式",modeTitle:"你今天想怎么学习？",modeSub:"你可以随时在设置中更改此项。",
+    modeGuided:"引导我",modeGuidedDesc:"逐步提示——自己找到答案。",
+    modeDirect:"直接给答案",modeDirectDesc:"我时间紧——直接告诉我答案。",continueBtn:"继续",
+    openShop:"点击打开商店 →",shopTitle:"🛍️ 商店",shopSub:"用答对题目赚来的金币兑换有趣的道具。",
+    catAvatar:"头像",catColor:"图标颜色",catPerks:"特权",buyBtn:"购买",selectBtn:"选择",ownedLabel:"已拥有",selectedLabel:"已选择",
+    streakFreezeName:"连续保护",streakFreezeDesc:"如果你错过一天，可以保住连续天数。",
+    doubleBoostName:"双倍加成",doubleBoostDesc:"接下来3次答对，金币/积分翻倍。",
+    notEnoughCoins:"金币还不够！",purchased:"购买成功！🎉",
+    pathTitle:"🗺️ 学习路径",pathSub:"按顺序完成主题以解锁下一个。",
+    topicLocked:"已锁定",topicDone:"已完成",topicCurrent:"进行中",topicStart:"开始",
+    exitPath:"退出路径",topicCompleteMsg:"🎉 主题完成！+10 奖励积分！",
+    correctCount:"正确：{n}/3",
+    displayNameLabel:"社区显示名称",displayNamePlaceholder:"例如：数学高手22",
+    communityTitle:"👥 社区",communitySub:"与其他学习者分享成就和想法。",
+    shareBtn:"发布",loginToPost:"登录（非访客）后即可发布到社区。",
+    noPostsYet:"还没有帖子——快来做第一个分享的人吧！",reportBtn:"举报",reportedBtn:"已举报",likeBtn:"点赞",
+    achvStreak:"🔥 我在YouthEdge连续学习了{n}天！",achvPoints:"🎉 我刚刚达到了{n}积分！",achvTopic:"✅ 我刚完成了学习路径中的一个主题！",
+    composePlaceholder:"分享一个想法或成就...",justNow:"刚刚",
+    careerTitle:"🎯 职业顾问",careerSub:"告诉我你想成为什么，我会为你规划所需的科目、课程和步骤。",
+    careerInputPlaceholder:"例如：工程师、医生、游戏设计师...",careerAskBtn:"开始",careerLoading:"正在生成你的规划…",
+    careerTryOne:"试试：",replyBtn:"回复",replyPlaceholder:"写一条回复...",
+    interviewTitle:"🎤 面试模拟器",interviewSub:"告诉我面试的主题，我来扮演面试官——可以说话或打字回答。",
+    interviewTopicPlaceholder:"例如：软件工程师求职面试",startInterviewBtn:"开始",endInterviewBtn:"结束",
+    interviewListening:"正在聆听…",interviewTranscribing:"正在转写…",interviewThinking:"思考中…",
+    micPermissionDenied:"语音回答需要麦克风权限。",
+    menuTitle:"菜单",menuShop:"奖励商店",menuPath:"学习路径",menuCommunity:"社区",menuCareer:"职业顾问",menuInterview:"面试模拟器",menuQuiz:"测验",guestLabel:"访客",
+    quizTitle:"📝 测验",quizSub:"选择你的年级和科目，开始练习。",
+    levelPrimaryQuiz:"小学 (1-5年级)",levelMiddleQuiz:"初中 (6-8年级)",levelHighQuiz:"高中/大学/求职",
+    backToClassesBtn:"← 更换科目",quizLoading:"正在生成题目…",nextQuestionBtn:"下一题 →",quizScoreFmt:"得分：{c}/{t}"}
+};
+let currentLang = localStorage.getItem('ye_lang') || 'en';
+
+function t(key){ return (STR[currentLang] && STR[currentLang][key]) || STR.en[key] || key; }
+
+function applyTranslations(){
+  document.documentElement.lang = currentLang;
+  document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    el.textContent = t(key);
+  });
+  document.querySelectorAll('[data-t-ph]').forEach(el => {
+    el.placeholder = t(el.getAttribute('data-t-ph'));
+  });
+  $('t_authHeadline').textContent = t('authHeadline');
+  $('t_authSub').textContent = t('authSub');
+  $('authSubmit').textContent = authMode === 'login' ? t('loginBtn') : t('signupBtn');
+  renderChat();
+  renderStats();
+  renderTopicBanner();
+  if(typeof renderShop === 'function'){ try{ renderShop(); }catch(e){} }
+}
+
+/* ---------------- Shortcuts / State ---------------- */
+const $ = (id) => document.getElementById(id);
+let currentUser = null;
+let isGuest = false;
+let currentSubject = "Math";
+let currentTopic = null;
+let topicCorrectCount = 0;
+let chatHistory = [];
+let stats = { sessions:0, points:0, streak:0, lastActive:null, level:'Middle', answerMode:'guided',
+  coins:0, avatarEmoji:'🧠', avatarColor:'', ownedAvatars:['🧠'], ownedColors:[''], streakFreezes:0, doubleBoostUses:0 };
+let awaitingBonusAnswer = false; // if true, next correct answer awards bonus points
+let theme = localStorage.getItem('ye_theme') || 'light';
+let schoolLevel = localStorage.getItem('ye_school_level') || 'Middle';
+
+/* ---------------- Theme ---------------- */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', theme);
+  $('themeQuickToggle').textContent = theme === 'dark' ? '☀️' : '🌙';
+  $('themeLightBtn').classList.toggle('active', theme === 'light');
+  $('themeDarkBtn').classList.toggle('active', theme === 'dark');
+}
+$('themeQuickToggle').onclick = () => { theme = theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('ye_theme', theme); applyTheme(); };
+$('themeLightBtn').onclick = () => { theme = 'light'; applyTheme(); };
+$('themeDarkBtn').onclick = () => { theme = 'dark'; applyTheme(); };
+
+/* ---------------- Hamburger main menu ---------------- */
+function renderProfileFooter(){
+  $('pfAvatar').textContent = stats.avatarEmoji || '🧠';
+  $('pfAvatar').style.background = stats.avatarColor || 'var(--purple-600)';
+  $('pfEmail').textContent = (currentUser && currentUser.email) ? currentUser.email : t('guestLabel');
+  $('pfPoints').textContent = '🪙 ' + (stats.points || 0) + ' ' + t('points');
+}
+$('pfAvatar').onclick = () => { $('mainMenuModal').classList.add('hidden'); openShop(); };
+$('pfEditBtn').onclick = () => { $('mainMenuModal').classList.add('hidden'); $('settingsBtn').click(); };
+$('hamburgerBtn').onclick = () => { renderProfileFooter(); $('mainMenuModal').classList.remove('hidden'); };
+$('closeMainMenu').onclick = () => $('mainMenuModal').classList.add('hidden');
+function menuGo(fn){ $('mainMenuModal').classList.add('hidden'); fn(); }
+$('menuShopItem').onclick = () => menuGo(openShop);
+$('menuPathItem').onclick = () => menuGo(openPath);
+$('menuCommunityItem').onclick = () => menuGo(openCommunity);
+$('menuCareerItem').onclick = () => menuGo(openCareer);
+$('menuInterviewItem').onclick = () => menuGo(openInterview);
+
+/* ---------------- School level buttons ---------------- */
+document.querySelectorAll('.school-btn').forEach(b => {
+  b.onclick = () => {
+    document.querySelectorAll('.school-btn').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    schoolLevel = b.dataset.level;
+  };
+});
+function refreshSchoolButtons(){
+  document.querySelectorAll('.school-btn').forEach(b => b.classList.toggle('active', b.dataset.level === schoolLevel));
+}
+
+/* ---------------- Answer mode ---------------- */
+function refreshModeButtons(){
+  document.querySelectorAll('.mode-option').forEach(b => b.classList.toggle('active', b.dataset.mode === stats.answerMode));
+  document.querySelectorAll('.mode-btn-settings').forEach(b => b.classList.toggle('active', b.dataset.mode === stats.answerMode));
+}
+function setAnswerMode(mode){
+  stats.answerMode = mode;
+  refreshModeButtons();
+  persistStats();
+}
+document.querySelectorAll('.mode-option').forEach(b => { b.onclick = () => setAnswerMode(b.dataset.mode); });
+document.querySelectorAll('.mode-btn-settings').forEach(b => { b.onclick = () => setAnswerMode(b.dataset.mode); });
+$('modeContinueBtn').onclick = () => $('modeModal').classList.add('hidden');
+
+/* ---------------- Guest persistence ---------------- */
+function loadGuestStats(){
+  try{
+    const raw = localStorage.getItem('ye_guest_stats');
+    const s = raw ? JSON.parse(raw) : { sessions:0, points:0, streak:0, lastActive:null };
+    return s;
+  }catch(e){ return { sessions:0, points:0, streak:0, lastActive:null }; }
+}
+function saveGuestStats(){ localStorage.setItem('ye_guest_stats', JSON.stringify(stats)); }
+function fillShopDefaults(){
+  if(stats.coins === undefined) stats.coins = 0;
+  if(!stats.avatarEmoji) stats.avatarEmoji = '🧠';
+  if(stats.avatarColor === undefined) stats.avatarColor = '';
+  if(!stats.ownedAvatars) stats.ownedAvatars = ['🧠'];
+  if(!stats.ownedColors) stats.ownedColors = [''];
+  if(stats.streakFreezes === undefined) stats.streakFreezes = 0;
+  if(stats.doubleBoostUses === undefined) stats.doubleBoostUses = 0;
+  if(!stats.pathProgress) stats.pathProgress = {};
+  if(!stats.displayName) stats.displayName = '';
+}
+
+/* ---------------- Groq key ---------------- */
+function getGroqKey(){ return localStorage.getItem('ye_groq_key') || ''; }
+function setGroqKey(k){ localStorage.setItem('ye_groq_key', k); }
+
+/* ---------------- Groq calls (routed through secure server function — no key on device) ---------------- */
+async function groqChat(body){
+  const res = await fetch('/.netlify/functions/groq-chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.json();
+}
+async function groqAudio(formData){
+  const res = await fetch('/.netlify/functions/groq-audio', {
+    method: 'POST',
+    body: formData
+  });
+  return res.json();
+}
+
+/* ---------------- Settings modal ---------------- */
+$('settingsBtn').onclick = () => {
+  $('displayNameInput').value = stats.displayName || '';
+  $('langSelect').value = currentLang;
+  refreshSchoolButtons();
+  $('settingsModal').classList.remove('hidden');
+};
+$('closeSettings').onclick = () => $('settingsModal').classList.add('hidden');
+$('saveKeyBtn').onclick = () => {
+  stats.displayName = $('displayNameInput').value.trim().slice(0,24);
+  persistStats();
+  currentLang = $('langSelect').value;
+  localStorage.setItem('ye_lang', currentLang);
+  localStorage.setItem('ye_school_level', schoolLevel);
+  applyTranslations();
+  $('settingsModal').classList.add('hidden');
+};
+
+/* ---------------- Membership modal ---------------- */
+$('membershipBar').onclick = () => {
+  $('membershipText').textContent = stats.points >= 3000 ? t('membershipUnlockedNote') : t('membershipComingSoon');
+  $('membershipModal').classList.remove('hidden');
+};
+$('closeMembership').onclick = () => $('membershipModal').classList.add('hidden');
+$('closeMembership2').onclick = () => $('membershipModal').classList.add('hidden');
+
+/* ---------------- Shop ---------------- */
+const AVATAR_OPTIONS = ['🧠','😀','🦁','🐱','🐼','🦉','🐧','🦊','🐢','🐬','🦄','🐸'];
+const COLOR_OPTIONS = ['','#ff6b6b','#ffb347','#ffd24c','#3ecf8e','#5B3EFF','#7c5cff','#a259ff','#ff6fb0'];
+const AVATAR_PRICE = 20;
+const COLOR_PRICE = 15;
+const FREEZE_PRICE = 50;
+const BOOST_PRICE = 40;
+
+function renderShop(){
+  $('shopCoinBalance').textContent = stats.coins || 0;
+
+  const aGrid = $('avatarShopGrid');
+  aGrid.innerHTML = '';
+  AVATAR_OPTIONS.forEach(emoji => {
+    const owned = (stats.ownedAvatars||[]).includes(emoji);
+    const selected = stats.avatarEmoji === emoji;
+    const div = document.createElement('div');
+    div.className = 'shop-item' + (owned ? ' owned' : '') + (selected ? ' selected' : '');
+    div.textContent = emoji;
+    const priceEl = document.createElement('span');
+    priceEl.className = 'si-price';
+    priceEl.textContent = owned ? (selected ? t('selectedLabel') : t('selectBtn')) : ('🪙' + AVATAR_PRICE);
+    div.appendChild(priceEl);
+    div.onclick = () => {
+      if(owned){ stats.avatarEmoji = emoji; persistStats(); renderStats(); renderShop(); }
+      else { buyAvatar(emoji); }
+    };
+    aGrid.appendChild(div);
+  });
+
+  const cGrid = $('colorShopGrid');
+  cGrid.innerHTML = '';
+  COLOR_OPTIONS.forEach(color => {
+    const owned = (stats.ownedColors||[]).includes(color);
+    const selected = (stats.avatarColor||'') === color;
+    const div = document.createElement('div');
+    div.className = 'shop-item' + (owned ? ' owned' : '') + (selected ? ' selected' : '');
+    const swatch = document.createElement('div');
+    swatch.className = 'shop-color-swatch';
+    swatch.style.background = color || 'rgba(255,255,255,0.18)';
+    swatch.style.border = color ? '1px solid rgba(0,0,0,0.08)' : '1px solid var(--line)';
+    div.appendChild(swatch);
+    const priceEl = document.createElement('span');
+    priceEl.className = 'si-price';
+    priceEl.textContent = owned ? (selected ? t('selectedLabel') : t('selectBtn')) : ('🪙' + COLOR_PRICE);
+    div.appendChild(priceEl);
+    div.onclick = () => {
+      if(owned){ stats.avatarColor = color; persistStats(); renderStats(); renderShop(); }
+      else { buyColor(color); }
+    };
+    cGrid.appendChild(div);
+  });
+
+  $('freezeCount').textContent = 'x' + (stats.streakFreezes || 0);
+  $('boostCount').textContent = 'x' + (stats.doubleBoostUses || 0);
+  $('buyFreezeBtn').textContent = t('buyBtn') + ' · ' + FREEZE_PRICE;
+  $('buyBoostBtn').textContent = t('buyBtn') + ' · ' + BOOST_PRICE;
+  $('buyFreezeBtn').disabled = (stats.coins||0) < FREEZE_PRICE;
+  $('buyBoostBtn').disabled = (stats.coins||0) < BOOST_PRICE;
+}
+
+function buyAvatar(emoji){
+  if((stats.coins||0) < AVATAR_PRICE){ alert(t('notEnoughCoins')); return; }
+  stats.coins -= AVATAR_PRICE;
+  stats.ownedAvatars = [...(stats.ownedAvatars||[]), emoji];
+  stats.avatarEmoji = emoji;
+  persistStats(); renderStats(); renderShop();
+}
+function buyColor(color){
+  if((stats.coins||0) < COLOR_PRICE){ alert(t('notEnoughCoins')); return; }
+  stats.coins -= COLOR_PRICE;
+  stats.ownedColors = [...(stats.ownedColors||[]), color];
+  stats.avatarColor = color;
+  persistStats(); renderStats(); renderShop();
+}
+$('buyFreezeBtn').onclick = () => {
+  if((stats.coins||0) < FREEZE_PRICE){ alert(t('notEnoughCoins')); return; }
+  stats.coins -= FREEZE_PRICE;
+  stats.streakFreezes = (stats.streakFreezes||0) + 1;
+  persistStats(); renderStats(); renderShop();
+};
+$('buyBoostBtn').onclick = () => {
+  if((stats.coins||0) < BOOST_PRICE){ alert(t('notEnoughCoins')); return; }
+  stats.coins -= BOOST_PRICE;
+  stats.doubleBoostUses = (stats.doubleBoostUses||0) + 3;
+  persistStats(); renderStats(); renderShop();
+};
+function openShop(){ renderShop(); $('shopModal').classList.remove('hidden'); }
+$('coinChip').onclick = openShop;
+$('closeShop').onclick = () => $('shopModal').classList.add('hidden');
+
+/* ---------------- Auth ---------------- */
+let authMode = 'login';
+$('tabLogin').onclick = () => { authMode='login'; $('tabLogin').classList.add('active'); $('tabSignup').classList.remove('active'); $('authSubmit').textContent = t('loginBtn'); };
+$('tabSignup').onclick = () => { authMode='signup'; $('tabSignup').classList.add('active'); $('tabLogin').classList.remove('active'); $('authSubmit').textContent = t('signupBtn'); };
+
+function showAuthError(msg){ const el = $('authError'); el.textContent = msg; el.classList.remove('hidden'); }
+function clearAuthError(){ $('authError').classList.add('hidden'); }
+
+$('authSubmit').onclick = async () => {
+  clearAuthError();
+  const email = $('authEmail').value.trim();
+  const pass = $('authPassword').value;
+  if(!email || !pass){ showAuthError('Please enter both email and password.'); return; }
+  $('authSubmit').disabled = true;
+  try{
+    if(authMode === 'login'){ await signInWithEmailAndPassword(auth, email, pass); }
+    else{ await createUserWithEmailAndPassword(auth, email, pass); }
+  }catch(err){ showAuthError(friendlyAuthError(err)); }
+  finally{ $('authSubmit').disabled = false; }
+};
+function friendlyAuthError(err){
+  const code = err.code || '';
+  if(code.includes('email-already-in-use')) return 'That email already has an account — try logging in.';
+  if(code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')) return 'Incorrect email or password.';
+  if(code.includes('weak-password')) return 'Password should be at least 6 characters.';
+  if(code.includes('invalid-email')) return 'That email address looks invalid.';
+  return 'Something went wrong. Please try again.';
+}
+$('guestBtn').onclick = () => { isGuest = true; currentUser = null; isAdmin = false; $('menuAdminItem').classList.add('hidden'); stats = loadGuestStats(); fillShopDefaults(); enterApp(); };
+
+/* ---------------- Google / Apple sign-in ---------------- */
+$('googleSignInBtn').onclick = () => {
+  clearAuthError();
+  const provider = new GoogleAuthProvider();
+  signInWithPopup(auth, provider).catch((err) => {
+    if(err && err.code === 'auth/popup-closed-by-user') return;
+    if(err && err.code === 'auth/popup-blocked'){
+      // Fallback for browsers that block popups — redirect flow instead
+      signInWithRedirect(auth, provider).catch((e2) => {
+        showAuthError((e2.code || '') + ': ' + (e2.message || 'Sign-in failed.'));
+      });
+      return;
+    }
+    showAuthError((err.code || '') + ': ' + (err.message || 'Sign-in failed.'));
+  });
+};
+$('appleSignInBtn').onclick = () => {
+  clearAuthError();
+  const provider = new OAuthProvider('apple.com');
+  signInWithPopup(auth, provider).catch((err) => {
+    if(err && err.code === 'auth/popup-closed-by-user') return;
+    if(err && err.code === 'auth/popup-blocked'){
+      signInWithRedirect(auth, provider).catch((e2) => {
+        showAuthError((e2.code || '') + ': ' + (e2.message || 'Sign-in failed.'));
+      });
+      return;
+    }
+    showAuthError((err.code || '') + ': ' + (err.message || 'Sign-in failed.'));
+  });
+};
+getRedirectResult(auth).catch((err) => {
+  if(err && err.code && err.code !== 'auth/popup-closed-by-user'){
+    showAuthError(friendlyAuthError(err));
+  }
+});
+
+/* ---------------- Forgot password ---------------- */
+$('forgotPasswordBtn').onclick = async () => {
+  clearAuthError();
+  let email = $('authEmail').value.trim();
+  if(!email){
+    email = (prompt(t('resetEmailPromptTitle')) || '').trim();
+  }
+  if(!email){ showAuthError(t('enterEmailFirst')); return; }
+  try{
+    await sendPasswordResetEmail(auth, email);
+    showAuthError(t('resetEmailSent'));
+  }catch(e){
+    showAuthError(t('resetEmailError'));
+  }
+};
+$('logoutBtn').onclick = async () => { if(!isGuest){ await signOut(auth); } isGuest = false; currentUser = null; location.reload(); };
+
+const ADMIN_EMAIL = 'arwadeveloperadmin@gmail.com';
+let isAdmin = false;
+
+onAuthStateChanged(auth, async (user) => {
+  if(user){
+    currentUser = user;
+    isGuest = false;
+    isAdmin = !!(user.email && user.email.toLowerCase() === ADMIN_EMAIL);
+    $('menuAdminItem').classList.toggle('hidden', !isAdmin);
+    await loadUserStats(user.uid);
+    enterApp();
+  }
+});
+async function loadUserStats(uid){
+  const ref = doc(db, 'users', uid);
+  const snap = await getDoc(ref);
+  if(snap.exists()){ stats = snap.data(); if(stats.points === undefined) stats.points = 0; if(!stats.answerMode) stats.answerMode = 'guided'; fillShopDefaults(); }
+  else{ stats = { sessions:0, points:0, streak:0, lastActive:null, answerMode:'guided' }; fillShopDefaults(); await setDoc(ref, stats); }
+  if(currentUser && currentUser.email){ stats.email = currentUser.email; }
+  if(stats.banned === undefined) stats.banned = false;
+}
+async function persistStats(){
+  if(isGuest){ saveGuestStats(); }
+  else if(currentUser){ const ref = doc(db, 'users', currentUser.uid); await setDoc(ref, stats, { merge:true }); }
+}
+
+/* ---------------- Enter app ---------------- */
+function enterApp(){
+  if(stats.banned && !isAdmin){
+    $('authScreen').classList.remove('hidden');
+    signOut(auth);
+    showAuthError('Your access to this app has been restricted.');
+    return;
+  }
+  $('authScreen').classList.add('hidden');
+  if(isAdmin){
+    $('mainScreen').classList.add('hidden');
+    $('adminScreen').classList.remove('hidden');
+    $('logoutBtn').classList.remove('hidden');
+    renderAdminDashboard();
+    return;
+  }
+  $('mainScreen').classList.remove('hidden');
+  $('logoutBtn').classList.remove('hidden');
+  if(!stats.answerMode) stats.answerMode = 'guided';
+  bumpSession();
+  renderStats();
+  refreshModeButtons();
+  $('modeModal').classList.remove('hidden');
+}
+function bumpSession(){
+  const today = new Date().toISOString().slice(0,10);
+  if(stats.lastActive !== today){
+    if(stats.lastActive){
+      const prev = new Date(stats.lastActive);
+      const diffDays = Math.round((new Date(today) - prev) / 86400000);
+      if(diffDays === 1){
+        stats.streak = (stats.streak||0) + 1;
+      } else if(diffDays > 1 && (stats.streakFreezes||0) > 0){
+        stats.streakFreezes -= 1; // consume a freeze, streak preserved
+      } else {
+        stats.streak = 1;
+      }
+    } else { stats.streak = 1; }
+    stats.lastActive = today;
+  }
+  stats.sessions = (stats.sessions || 0) + 1;
+  persistStats();
+}
+function renderStats(){
+  $('statSessions').textContent = stats.sessions || 0;
+  $('statPoints').textContent = stats.points || 0;
+  $('statStreak').textContent = (stats.streak || 0) + '🔥';
+  $('coinCount').textContent = stats.coins || 0;
+  const pts = stats.points || 0;
+  const pct = Math.min(100, Math.round((pts/3000)*100));
+  $('mbFill').style.width = pct + '%';
+  $('mbLabel').textContent = '🏆 ' + pts + ' / 3000';
+  applyAvatarToTopbar();
+}
+function applyAvatarToTopbar(){
+  const mark = $('topbarMark');
+  mark.textContent = stats.avatarEmoji || '🧠';
+  mark.style.background = stats.avatarColor || 'rgba(255,255,255,0.18)';
+}
+
+/* ---------------- Subjects ---------------- */
+document.querySelectorAll('.subject-chip').forEach(chip => {
+  chip.onclick = () => {
+    document.querySelectorAll('.subject-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentSubject = chip.dataset.subject;
+    chatHistory = [];
+    awaitingBonusAnswer = false;
+    currentTopic = null;
+    topicCorrectCount = 0;
+    renderTopicBanner();
+    renderChat();
+  };
+});
+
+/* ---------------- Chat rendering ---------------- */
+function renderChat(){
+  const area = $('chatArea');
+  area.innerHTML = '';
+  if(chatHistory.length === 0){
+    area.innerHTML = '<div class="empty-state"><span class="emoji">🧠</span><h3>' + t('emptyTitle') + '</h3><p>' + t('emptyBody') + '</p></div>';
+    return;
+  }
+  chatHistory.forEach((m,i) => {
+    if(m.type === 'bonus-prompt'){
+      const div = document.createElement('div');
+      div.className = 'bonus-prompt';
+      const p = document.createElement('p');
+      p.textContent = t('bonusOffer').replace('{pts}', m.pointsAwarded || 1);
+      div.appendChild(p);
+      const actions = document.createElement('div');
+      actions.className = 'bonus-actions';
+      const yesBtn = document.createElement('button');
+      yesBtn.className = 'bonus-yes'; yesBtn.textContent = t('bonusYes');
+      yesBtn.onclick = () => handleBonusChoice(true, i);
+      const noBtn = document.createElement('button');
+      noBtn.className = 'bonus-no'; noBtn.textContent = t('bonusNo');
+      noBtn.onclick = () => handleBonusChoice(false, i);
+      actions.appendChild(yesBtn); actions.appendChild(noBtn);
+      div.appendChild(actions);
+      area.appendChild(div);
+      return;
+    }
+    const div = document.createElement('div');
+    div.className = 'msg ' + (m.role === 'user' ? 'user' : 'ai') + (m.thinking ? ' thinking' : '');
+    div.textContent = m.content;
+    area.appendChild(div);
+  });
+  area.scrollTop = area.scrollHeight;
+}
+
+function handleBonusChoice(yes, idx){
+  chatHistory[idx].resolved = true;
+  renderChat();
+  if(yes){
+    awaitingBonusAnswer = true;
+    sendMessage("Please give me a bonus question, a bit harder than before.", true);
+  } else {
+    awaitingBonusAnswer = false;
+  }
+}
+
+/* ---------------- System prompts ---------------- */
+const BASE_PROMPTS = {
+  Math: "You are a warm, encouraging Socratic math tutor. NEVER give the final numeric answer directly. Ask a guiding question or give a small hint that leads the student to the next step.",
+  Science: "You are a warm, encouraging Socratic science tutor. Never give the final answer outright — guide with questions, real-world analogies, and small hints.",
+  English: "You are a warm, encouraging Socratic English/writing tutor. Help with grammar, essay structure, and comprehension by asking guiding questions rather than rewriting their work for them.",
+  History: "You are a warm, encouraging Socratic history tutor. Guide the student to think about causes, context and consequences with questions rather than stating facts outright.",
+  Geography: "You are a warm, encouraging Socratic geography tutor. Guide with questions about maps, places, and systems rather than stating the answer directly.",
+  Coding: "You are a warm, encouraging Socratic coding tutor covering programming in general (Python, JavaScript, and core computer science concepts). Never just hand over working code — ask guiding questions, point out what to look up or try, and let the student write and fix the code themselves. Use small code snippets only to illustrate a concept, not to solve their exact task.",
+  Other: "You are a warm, encouraging Socratic tutor for any subject the student brings you. Guide them step by step with questions and hints rather than handing over the final answer."
+};
+
+/* ---------------- Learning Paths ---------------- */
+const PATHS = {
+  Coding: [
+    "Programming Basics",
+    "Python Fundamentals",
+    "JavaScript Fundamentals",
+    "Control Flow & Loops",
+    "Functions & Data Structures",
+    "Intro to AI & Machine Learning",
+    "Mini Project Challenge"
+  ]
+};
+const TOPIC_THRESHOLD = 3;
+const TOPIC_BONUS = 10;
+
+function getPathProgress(subject){
+  if(!stats.pathProgress) stats.pathProgress = {};
+  if(!stats.pathProgress[subject]) stats.pathProgress[subject] = { completedCount: 0 };
+  return stats.pathProgress[subject];
+}
+
+function renderPath(){
+  const list = $('pathNodeList');
+  list.innerHTML = '';
+  Object.keys(PATHS).forEach(subject => {
+    const topics = PATHS[subject];
+    const progress = getPathProgress(subject);
+    const completedCount = progress.completedCount || 0;
+    const header = document.createElement('h3');
+    header.textContent = (t('subj_' + subject) || subject);
+    header.style.marginTop = '14px';
+    list.appendChild(header);
+    topics.forEach((topic, idx) => {
+      const node = document.createElement('div');
+      let status = 'locked';
+      if(idx < completedCount) status = 'done';
+      else if(idx === completedCount) status = 'current';
+      node.className = 'path-node ' + status;
+      const circle = document.createElement('div');
+      circle.className = 'pn-circle';
+      circle.textContent = status === 'done' ? '✓' : (idx + 1);
+      const info = document.createElement('div');
+      info.className = 'pn-info';
+      const title = document.createElement('div');
+      title.className = 'pn-title';
+      title.textContent = topic;
+      const statusLine = document.createElement('div');
+      statusLine.className = 'pn-status';
+      statusLine.textContent = status === 'done' ? t('topicDone') : status === 'current' ? t('topicStart') : t('topicLocked');
+      info.appendChild(title);
+      info.appendChild(statusLine);
+      node.appendChild(circle);
+      node.appendChild(info);
+      if(status !== 'locked'){
+        node.onclick = () => startTopic(subject, topic, idx);
+      }
+      list.appendChild(node);
+    });
+  });
+}
+
+function startTopic(subject, topic, idx){
+  currentSubject = subject;
+  currentTopic = topic;
+  topicCorrectCount = 0;
+  chatHistory = [];
+  awaitingBonusAnswer = false;
+  document.querySelectorAll('.subject-chip').forEach(c => c.classList.toggle('active', c.dataset.subject === subject));
+  $('pathModal').classList.add('hidden');
+  renderTopicBanner();
+  renderChat();
+}
+
+function renderTopicBanner(){
+  const banner = $('topicBanner');
+  if(!currentTopic){ banner.classList.add('hidden'); return; }
+  banner.classList.remove('hidden');
+  $('tbTitle').textContent = currentTopic;
+  $('tbProgress').textContent = t('correctCount').replace('{n}', topicCorrectCount);
+}
+
+function openPath(){ renderPath(); $('pathModal').classList.remove('hidden'); }
+$('closePath').onclick = () => $('pathModal').classList.add('hidden');
+$('exitPathBtn').onclick = () => { currentTopic = null; topicCorrectCount = 0; renderTopicBanner(); };
+
+/* ---------------- Community ---------------- */
+function timeAgo(date){
+  if(!date) return t('justNow');
+  const secs = Math.floor((Date.now() - date.getTime()) / 1000);
+  if(secs < 60) return t('justNow');
+  const mins = Math.floor(secs / 60);
+  if(mins < 60) return mins + 'm';
+  const hrs = Math.floor(mins / 60);
+  if(hrs < 24) return hrs + 'h';
+  const days = Math.floor(hrs / 24);
+  return days + 'd';
+}
+function getLikedSet(){ try{ return new Set(JSON.parse(localStorage.getItem('ye_liked_posts')||'[]')); }catch(e){ return new Set(); } }
+function saveLikedSet(s){ localStorage.setItem('ye_liked_posts', JSON.stringify([...s])); }
+function getReportedSet(){ try{ return new Set(JSON.parse(localStorage.getItem('ye_reported_posts')||'[]')); }catch(e){ return new Set(); } }
+function saveReportedSet(s){ localStorage.setItem('ye_reported_posts', JSON.stringify([...s])); }
+
+function renderCompose(){
+  const area = $('composeArea');
+  area.innerHTML = '';
+  if(isGuest || !currentUser){
+    const note = document.createElement('div');
+    note.className = 'login-to-post';
+    note.textContent = t('loginToPost');
+    area.appendChild(note);
+    return;
+  }
+  const box = document.createElement('div');
+  box.className = 'compose-box';
+  const chipRow = document.createElement('div');
+  chipRow.className = 'chip-row';
+  const textarea = document.createElement('textarea');
+  textarea.placeholder = t('composePlaceholder');
+  textarea.maxLength = 240;
+  const templates = [
+    t('achvStreak').replace('{n}', stats.streak || 0),
+    t('achvPoints').replace('{n}', stats.points || 0),
+    t('achvTopic')
+  ];
+  templates.forEach(tpl => {
+    const chip = document.createElement('button');
+    chip.className = 'quick-chip';
+    chip.textContent = tpl.length > 26 ? tpl.slice(0,24) + '…' : tpl;
+    chip.onclick = () => { textarea.value = tpl; textarea.focus(); };
+    chipRow.appendChild(chip);
+  });
+  const postBtn = document.createElement('button');
+  postBtn.className = 'btn btn-primary';
+  postBtn.style.marginTop = '8px';
+  postBtn.textContent = t('shareBtn');
+  postBtn.onclick = async () => {
+    const text = textarea.value.trim();
+    if(!text) return;
+    postBtn.disabled = true;
+    try{
+      await addDoc(collection(db, 'posts'), {
+        uid: currentUser.uid,
+        displayName: stats.displayName || ('Learner' + currentUser.uid.slice(0,4)),
+        text: text.slice(0,240),
+        createdAt: serverTimestamp(),
+        likes: 0,
+        reportedCount: 0
+      });
+      textarea.value = '';
+      await loadFeed();
+    }catch(err){ /* fail silently, feed just won't update */ }
+    postBtn.disabled = false;
+  };
+  box.appendChild(chipRow);
+  box.appendChild(textarea);
+  box.appendChild(postBtn);
+  area.appendChild(box);
+}
+
+async function loadFeed(){
+  const feedEl = $('feedList');
+  feedEl.innerHTML = '<div class="community-empty">…</div>';
+  try{
+    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'), limit(50));
+    const snap = await getDocs(q);
+    feedEl.innerHTML = '';
+    if(snap.empty){
+      feedEl.innerHTML = '<div class="community-empty">' + t('noPostsYet') + '</div>';
+      return;
+    }
+    const liked = getLikedSet();
+    const reported = getReportedSet();
+    snap.forEach(docSnap => {
+      const post = docSnap.data();
+      const id = docSnap.id;
+      const card = document.createElement('div');
+      card.className = 'post-card';
+      const head = document.createElement('div');
+      head.className = 'pc-head';
+      const name = document.createElement('div');
+      name.className = 'pc-name';
+      name.textContent = post.displayName || 'Learner';
+      const time = document.createElement('div');
+      time.className = 'pc-time';
+      time.textContent = post.createdAt && post.createdAt.toDate ? timeAgo(post.createdAt.toDate()) : t('justNow');
+      head.appendChild(name); head.appendChild(time);
+      const textEl = document.createElement('div');
+      textEl.className = 'pc-text';
+      textEl.textContent = post.text || '';
+      const actions = document.createElement('div');
+      actions.className = 'pc-actions';
+      const likeBtn = document.createElement('button');
+      likeBtn.className = 'pc-action-btn' + (liked.has(id) ? ' liked' : '');
+      likeBtn.textContent = (liked.has(id) ? '❤️ ' : '🤍 ') + (post.likes || 0);
+      likeBtn.onclick = async () => {
+        if(liked.has(id) || !currentUser) return;
+        liked.add(id); saveLikedSet(liked);
+        likeBtn.classList.add('liked');
+        likeBtn.textContent = '❤️ ' + ((post.likes||0) + 1);
+        try{ await updateDoc(doc(db,'posts',id), { likes: increment(1) }); }catch(e){}
+      };
+      const reportBtn = document.createElement('button');
+      reportBtn.className = 'pc-action-btn' + (reported.has(id) ? ' reported' : '');
+      reportBtn.textContent = '🚩 ' + (reported.has(id) ? t('reportedBtn') : t('reportBtn'));
+      reportBtn.onclick = async () => {
+        if(reported.has(id) || !currentUser) return;
+        reported.add(id); saveReportedSet(reported);
+        reportBtn.classList.add('reported');
+        reportBtn.textContent = '🚩 ' + t('reportedBtn');
+        try{ await updateDoc(doc(db,'posts',id), { reportedCount: increment(1) }); }catch(e){}
+      };
+      const replyBtn = document.createElement('button');
+      replyBtn.className = 'pc-action-btn';
+      replyBtn.textContent = '💬 ' + t('replyBtn');
+      const replySection = document.createElement('div');
+      replySection.className = 'reply-section hidden';
+      replyBtn.onclick = () => {
+        replySection.classList.toggle('hidden');
+        if(!replySection.classList.contains('hidden') && !replySection.dataset.loaded){
+          replySection.dataset.loaded = '1';
+          loadReplies(id, replySection);
+        }
+      };
+      actions.appendChild(likeBtn);
+      actions.appendChild(reportBtn);
+      actions.appendChild(replyBtn);
+      card.appendChild(head);
+      card.appendChild(textEl);
+      card.appendChild(actions);
+      card.appendChild(replySection);
+      feedEl.appendChild(card);
+    });
+  }catch(err){
+    feedEl.innerHTML = '<div class="community-empty">' + t('noPostsYet') + '</div>';
+  }
+}
+
+function openCommunity(){
+  renderCompose();
+  $('communityModal').classList.remove('hidden');
+  loadFeed();
+}
+$('closeCommunity').onclick = () => $('communityModal').classList.add('hidden');
+
+async function loadReplies(postId, sectionEl){
+  sectionEl.innerHTML = '…';
+  let replies = [];
+  try{
+    const q = query(collection(db,'replies'), where('postId','==',postId), limit(100));
+    const snap = await getDocs(q);
+    snap.forEach(d => replies.push({ id:d.id, ...d.data() }));
+    replies.sort((a,b) => {
+      const ta = a.createdAt && a.createdAt.toMillis ? a.createdAt.toMillis() : 0;
+      const tb = b.createdAt && b.createdAt.toMillis ? b.createdAt.toMillis() : 0;
+      return ta - tb;
+    });
+  }catch(e){}
+  sectionEl.innerHTML = '';
+  replies.forEach(r => {
+    const row = document.createElement('div');
+    row.className = 'reply-item';
+    const name = document.createElement('span');
+    name.className = 'r-name';
+    name.textContent = (r.displayName || 'Learner') + ':';
+    const text = document.createElement('span');
+    text.className = 'r-text';
+    text.textContent = r.text || '';
+    row.appendChild(name); row.appendChild(text);
+    sectionEl.appendChild(row);
+  });
+  if(currentUser && !isGuest){
+    const row = document.createElement('div');
+    row.className = 'reply-input-row';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.maxLength = 140;
+    input.placeholder = t('replyPlaceholder');
+    const btn = document.createElement('button');
+    btn.textContent = t('replyBtn');
+    btn.onclick = async () => {
+      const text = input.value.trim();
+      if(!text) return;
+      btn.disabled = true;
+      try{
+        await addDoc(collection(db,'replies'), {
+          postId, uid: currentUser.uid,
+          displayName: stats.displayName || ('Learner' + currentUser.uid.slice(0,4)),
+          text: text.slice(0,140), createdAt: serverTimestamp()
+        });
+        input.value = '';
+        sectionEl.dataset.loaded = '';
+        loadReplies(postId, sectionEl);
+      }catch(e){}
+      btn.disabled = false;
+    };
+    row.appendChild(input); row.appendChild(btn);
+    sectionEl.appendChild(row);
+  }
+}
+
+/* ---------------- Career Advisor ---------------- */
+const CAREER_SUGGESTIONS = ['Engineer','Doctor','Game Designer','Teacher','Lawyer','Data Scientist'];
+
+function renderCareerChips(){
+  const chips = $('careerChips');
+  chips.innerHTML = '';
+  const label = document.createElement('span');
+  label.style.fontSize = '11.5px';
+  label.style.color = 'var(--ink-soft)';
+  label.style.marginRight = '2px';
+  label.textContent = t('careerTryOne');
+  chips.appendChild(label);
+  CAREER_SUGGESTIONS.forEach(s => {
+    const chip = document.createElement('button');
+    chip.className = 'quick-chip';
+    chip.textContent = s;
+    chip.onclick = () => { $('careerInput').value = s; askCareerAdvisor(); };
+    chips.appendChild(chip);
+  });
+}
+
+async function askCareerAdvisor(){
+  const goal = $('careerInput').value.trim();
+  if(!goal) return;
+
+  const resultArea = $('careerResultArea');
+  resultArea.innerHTML = '<div class="career-loading">' + t('careerLoading') + '</div>';
+  $('careerAskBtn').disabled = true;
+
+  const sysPrompt = "You are a friendly, knowledgeable career advisor for a student in " + schoolLevel + " school. " +
+    "The student wants to become: \"" + goal + "\". " +
+    "Give a clear, organized roadmap using plain text only (no markdown symbols like # or **). Structure it with short line headers followed by bullet points using a dash (-). Cover: " +
+    "1) A 1-2 sentence overview of what this career involves. " +
+    "2) Key school subjects to focus on right now, matched to their " + schoolLevel + " school level. " +
+    "3) Specific classes or electives worth taking if available. " +
+    "4) Next steps after school (degree, certifications, entry paths). " +
+    "Keep it encouraging, concrete, and not too long (under 200 words). Respond in " + LANG_NAMES[currentLang] + ".";
+
+  try{
+    const data = await groqChat({
+      model:'openai/gpt-oss-120b',
+      messages:[{ role:'system', content: sysPrompt }, { role:'user', content: 'How do I become a ' + goal + '?' }],
+      temperature:0.6,
+      max_tokens:500
+    });
+    if(data.error){
+      resultArea.innerHTML = '<div class="career-result">⚠️ ' + data.error.message + '</div>';
+    } else {
+      const reply = data.choices?.[0]?.message?.content || '';
+      const div = document.createElement('div');
+      div.className = 'career-result';
+      div.textContent = reply;
+      resultArea.innerHTML = '';
+      resultArea.appendChild(div);
+    }
+  }catch(err){
+    resultArea.innerHTML = '<div class="career-result">⚠️ Network error — please try again.</div>';
+  }finally{
+    $('careerAskBtn').disabled = false;
+  }
+}
+
+function openCareer(){
+  renderCareerChips();
+  $('careerResultArea').innerHTML = '';
+  $('careerInput').value = '';
+  $('careerModal').classList.remove('hidden');
+}
+$('closeCareer').onclick = () => $('careerModal').classList.add('hidden');
+$('careerAskBtn').onclick = askCareerAdvisor;
+$('careerInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ e.preventDefault(); askCareerAdvisor(); }
+});
+
+/* ---------------- Interview Simulator ---------------- */
+const INTERVIEW_SUGGESTIONS = ['Software Engineer job interview','College admissions interview','Retail job interview','Medical school interview'];
+let interviewHistory = [];
+let interviewTopic = '';
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let voiceMuted = localStorage.getItem('ye_voice_muted') === '1';
+
+function primeSpeech(){
+  // iOS Safari only allows speech synthesis to start reliably if triggered
+  // synchronously inside a user tap — this "unlocks" it for the async reply that follows.
+  try{
+    const unlock = new SpeechSynthesisUtterance(' ');
+    unlock.volume = 0;
+    window.speechSynthesis.speak(unlock);
+  }catch(e){}
+}
+function speak(text){
+  if(voiceMuted) return;
+  try{
+    window.speechSynthesis.cancel();
+    setTimeout(() => {
+      const utt = new SpeechSynthesisUtterance(text);
+      const langMap = { en:'en-US', ar:'ar-SA', es:'es-ES', fr:'fr-FR', zh:'zh-CN' };
+      utt.lang = langMap[currentLang] || 'en-US';
+      utt.volume = 1;
+      window.speechSynthesis.speak(utt);
+    }, 150);
+  }catch(e){}
+}
+
+function renderInterviewChips(){
+  const chips = $('interviewChips');
+  chips.innerHTML = '';
+  INTERVIEW_SUGGESTIONS.forEach(s => {
+    const chip = document.createElement('button');
+    chip.className = 'quick-chip';
+    chip.textContent = s;
+    chip.onclick = () => { $('interviewTopicInput').value = s; startInterview(); };
+    chips.appendChild(chip);
+  });
+}
+
+function renderInterviewChat(){
+  const area = $('interviewChatArea');
+  area.innerHTML = '';
+  interviewHistory.forEach(m => {
+    const div = document.createElement('div');
+    div.className = 'msg ' + (m.role === 'user' ? 'user' : 'ai');
+    div.textContent = m.content;
+    area.appendChild(div);
+  });
+  area.scrollTop = area.scrollHeight;
+}
+
+function buildInterviewSystemPrompt(){
+  return "You are a professional, friendly interviewer conducting a mock interview about: \"" + interviewTopic + "\". " +
+    "Ask one clear, realistic question at a time. After the candidate answers, give brief encouraging feedback in 1 short sentence, then ask the next relevant question. " +
+    "Keep every message under 50 words. Respond in " + LANG_NAMES[currentLang] + ".";
+}
+
+async function startInterview(){
+  const topic = $('interviewTopicInput').value.trim();
+  if(!topic) return;
+  primeSpeech();
+
+  interviewTopic = topic;
+  interviewHistory = [];
+  $('interviewSetup').classList.add('hidden');
+  $('interviewChatWrap').classList.remove('hidden');
+  $('interviewTopicLabel').textContent = topic;
+  $('interviewStatus').textContent = t('interviewThinking');
+  renderInterviewChat();
+
+  try{
+    const data = await groqChat({
+      model:'openai/gpt-oss-120b',
+      messages:[{ role:'system', content: buildInterviewSystemPrompt() }, { role:'user', content: 'Begin the interview with your first question.' }],
+      temperature:0.7, max_tokens:200
+    });
+    const reply = data.choices?.[0]?.message?.content || '...';
+    interviewHistory.push({ role:'assistant', content: reply });
+    renderInterviewChat();
+    speak(reply);
+  }catch(e){
+    interviewHistory.push({ role:'assistant', content:'⚠️ Network error.' });
+    renderInterviewChat();
+  }
+  $('interviewStatus').textContent = '';
+}
+
+async function sendInterviewMessage(text){
+  if(!text) return;
+  interviewHistory.push({ role:'user', content:text });
+  renderInterviewChat();
+  $('interviewStatus').textContent = t('interviewThinking');
+  try{
+    const messages = [
+      { role:'system', content: buildInterviewSystemPrompt() },
+      ...interviewHistory.map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }))
+    ];
+    const data = await groqChat({ model:'openai/gpt-oss-120b', messages, temperature:0.7, max_tokens:200 });
+    const reply = data.choices?.[0]?.message?.content || '...';
+    interviewHistory.push({ role:'assistant', content: reply });
+    renderInterviewChat();
+    speak(reply);
+  }catch(e){
+    interviewHistory.push({ role:'assistant', content:'⚠️ Network error.' });
+    renderInterviewChat();
+  }
+  $('interviewStatus').textContent = '';
+}
+
+async function toggleRecording(){
+  if(isRecording){
+    mediaRecorder.stop();
+    return;
+  }
+  primeSpeech();
+  try{
+    const stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+    audioChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = (e) => { if(e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = async () => {
+      isRecording = false;
+      $('micBtn').classList.remove('recording');
+      stream.getTracks().forEach(tr => tr.stop());
+      $('interviewStatus').textContent = t('interviewTranscribing');
+      const mimeType = mediaRecorder.mimeType || 'audio/webm';
+      const ext = mimeType.includes('mp4') ? 'mp4' : mimeType.includes('webm') ? 'webm' : 'wav';
+      const blob = new Blob(audioChunks, { type: mimeType });
+      try{
+        const form = new FormData();
+        form.append('file', blob, 'audio.' + ext);
+        form.append('model', 'whisper-large-v3-turbo');
+        const data = await groqAudio(form);
+        $('interviewStatus').textContent = '';
+        if(data.text && data.text.trim()){
+          sendInterviewMessage(data.text.trim());
+        }
+      }catch(e){
+        $('interviewStatus').textContent = '';
+      }
+    };
+    mediaRecorder.start();
+    isRecording = true;
+    $('micBtn').classList.add('recording');
+    $('interviewStatus').textContent = t('interviewListening');
+  }catch(e){
+    alert(t('micPermissionDenied'));
+  }
+}
+
+function openInterview(){
+  renderInterviewChips();
+  $('interviewSetup').classList.remove('hidden');
+  $('interviewChatWrap').classList.add('hidden');
+  $('interviewTopicInput').value = '';
+  $('muteToggleBtn').textContent = voiceMuted ? '🔇' : '🔊';
+  $('interviewModal').classList.remove('hidden');
+};
+$('closeInterview').onclick = () => {
+  window.speechSynthesis.cancel();
+  if(isRecording && mediaRecorder) mediaRecorder.stop();
+  $('interviewModal').classList.add('hidden');
+};
+$('interviewStartBtn').onclick = startInterview;
+$('interviewTopicInput').addEventListener('keydown', (e) => { if(e.key === 'Enter'){ e.preventDefault(); startInterview(); } });
+$('endInterviewBtn').onclick = () => {
+  window.speechSynthesis.cancel();
+  if(isRecording && mediaRecorder) mediaRecorder.stop();
+  $('interviewSetup').classList.remove('hidden');
+  $('interviewChatWrap').classList.add('hidden');
+};
+$('muteToggleBtn').onclick = () => {
+  voiceMuted = !voiceMuted;
+  localStorage.setItem('ye_voice_muted', voiceMuted ? '1' : '0');
+  $('muteToggleBtn').textContent = voiceMuted ? '🔇' : '🔊';
+  if(voiceMuted) window.speechSynthesis.cancel();
+};
+$('micBtn').onclick = toggleRecording;
+$('interviewSendBtn').onclick = () => {
+  const input = $('interviewTextInput');
+  const text = input.value.trim();
+  if(!text) return;
+  primeSpeech();
+  input.value = '';
+  sendInterviewMessage(text);
+};
+$('interviewTextInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter'){ e.preventDefault(); $('interviewSendBtn').click(); }
+});
+
+/* ---------------- Quiz ---------------- */
+const QUIZ_CLASSES = {
+  Primary: ['Basic Math','English'],
+  Middle: ['Math','English','Basic Geometry','Measurement'],
+  High: ['Algebra 1','Geometry','Algebra 2','Integrated Math 1','Integrated Math 2','Integrated Math 3','Trigonometry','Pre-Calculus','Statistics','PSAT English','PSAT Math','ACT English','ACT Math']
+};
+let quizLevel = 'Primary';
+let quizClass = '';
+let quizScore = { correct:0, total:0 };
+let currentQuizQuestion = null;
+
+function renderQuizLevelTabs(){
+  const tabs = $('quizLevelTabs');
+  tabs.innerHTML = '';
+  const levels = [['Primary','levelPrimaryQuiz'],['Middle','levelMiddleQuiz'],['High','levelHighQuiz']];
+  levels.forEach(([lvl,key]) => {
+    const btn = document.createElement('button');
+    btn.textContent = t(key);
+    btn.className = quizLevel === lvl ? 'active' : '';
+    btn.onclick = () => { quizLevel = lvl; renderQuizLevelTabs(); renderQuizClasses(); };
+    tabs.appendChild(btn);
+  });
+}
+function renderQuizClasses(){
+  const grid = $('quizClassGrid');
+  grid.innerHTML = '';
+  (QUIZ_CLASSES[quizLevel] || []).forEach(cls => {
+    const chip = document.createElement('button');
+    chip.className = 'quiz-class-chip';
+    chip.textContent = cls;
+    chip.onclick = () => startQuizClass(cls);
+    grid.appendChild(chip);
+  });
+}
+function openQuiz(){
+  quizClass = '';
+  $('quizLevelPicker').classList.remove('hidden');
+  $('quizPlayArea').classList.add('hidden');
+  renderQuizLevelTabs();
+  renderQuizClasses();
+  $('quizModal').classList.remove('hidden');
+}
+function startQuizClass(cls){
+  quizClass = cls;
+  quizScore = { correct:0, total:0 };
+  $('quizLevelPicker').classList.add('hidden');
+  $('quizPlayArea').classList.remove('hidden');
+  $('quizClassLabel').textContent = cls;
+  updateQuizScoreLabel();
+  fetchQuizQuestion();
+}
+function updateQuizScoreLabel(){
+  $('quizScoreLabel').textContent = t('quizScoreFmt').replace('{c}', quizScore.correct).replace('{t}', quizScore.total);
+}
+async function fetchQuizQuestion(){
+  const area = $('quizQuestionArea');
+  area.innerHTML = '<div class="career-loading">' + t('quizLoading') + '</div>';
+  const sysPrompt = "You are a quiz question generator for a student studying \"" + quizClass + "\" (" + quizLevel + " level). " +
+    "Generate exactly one multiple-choice question at an appropriate difficulty for this class. " +
+    "Respond ONLY with valid JSON, no markdown, no code fences, in this exact shape: " +
+    '{"question":"...", "options":["...","...","...","..."], "correctIndex":0}. ' +
+    "options must have exactly 4 items. correctIndex is the 0-based index of the correct option. " +
+    "Write the question and options in " + LANG_NAMES[currentLang] + ".";
+  try{
+    const data = await groqChat({
+      model:'openai/gpt-oss-120b',
+      messages:[{ role:'system', content: sysPrompt }, { role:'user', content:'Generate the question now.' }],
+      temperature:0.8, max_tokens:400
+    });
+    let raw = data.choices?.[0]?.message?.content || '';
+    raw = raw.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+    const parsed = JSON.parse(raw);
+    currentQuizQuestion = parsed;
+    renderQuizQuestion();
+  }catch(e){
+    area.innerHTML = '<div class="career-result">⚠️ Could not generate a question — try again.</div>';
+  }
+}
+function renderQuizQuestion(){
+  const area = $('quizQuestionArea');
+  area.innerHTML = '';
+  if(!currentQuizQuestion) return;
+  const card = document.createElement('div');
+  card.className = 'quiz-question-card';
+  const qText = document.createElement('div');
+  qText.className = 'qq-text';
+  qText.textContent = currentQuizQuestion.question;
+  card.appendChild(qText);
+  (currentQuizQuestion.options || []).forEach((opt, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option-btn';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuizOption(idx, card);
+    card.appendChild(btn);
+  });
+  area.appendChild(card);
+}
+function answerQuizOption(idx, card){
+  const buttons = card.querySelectorAll('.quiz-option-btn');
+  const correctIdx = currentQuizQuestion.correctIndex;
+  buttons.forEach((b, i) => {
+    b.disabled = true;
+    if(i === correctIdx) b.classList.add('correct');
+    else if(i === idx) b.classList.add('incorrect');
+  });
+  quizScore.total += 1;
+  if(idx === correctIdx){
+    quizScore.correct += 1;
+    stats.points = (stats.points || 0) + 1;
+    stats.coins = (stats.coins || 0) + 1;
+    persistStats();
+    renderStats();
+  }
+  updateQuizScoreLabel();
+  const nextBtn = document.createElement('button');
+  nextBtn.className = 'quiz-next-btn';
+  nextBtn.textContent = t('nextQuestionBtn');
+  nextBtn.onclick = fetchQuizQuestion;
+  card.appendChild(nextBtn);
+}
+$('closeQuiz').onclick = () => $('quizModal').classList.add('hidden');
+$('quizBackBtn').onclick = () => {
+  $('quizLevelPicker').classList.remove('hidden');
+  $('quizPlayArea').classList.add('hidden');
+  renderQuizLevelTabs();
+  renderQuizClasses();
+};
+$('menuQuizItem').onclick = () => menuGo(openQuiz);
+
+/* ---------------- Admin: App Color ---------------- */
+const COLOR_PRESETS = [
+  { name:'Purple', hex:'#5B3EFF' },
+  { name:'Navy', hex:'#1B3A6B' },
+  { name:'Pink', hex:'#FF4FA3' },
+  { name:'Green', hex:'#2E8B57' },
+  { name:'Orange', hex:'#FF7A33' },
+  { name:'Red', hex:'#E63950' },
+  { name:'Teal', hex:'#14919B' },
+  { name:'Slate', hex:'#445069' }
+];
+const DEFAULT_BRAND_COLOR = '#5B3EFF';
+let currentBrandColor = DEFAULT_BRAND_COLOR;
+
+function shadeHex(hex, percent){
+  const num = parseInt(hex.replace('#',''), 16);
+  let r = (num >> 16) + Math.round(255 * percent / 100);
+  let g = ((num >> 8) & 0x00FF) + Math.round(255 * percent / 100);
+  let b = (num & 0x0000FF) + Math.round(255 * percent / 100);
+  r = Math.max(Math.min(255, r), 0); g = Math.max(Math.min(255, g), 0); b = Math.max(Math.min(255, b), 0);
+  return '#' + (0x1000000 + r * 0x10000 + g * 0x100 + b).toString(16).slice(1);
+}
+function applyBrandColor(hex){
+  currentBrandColor = hex;
+  const root = document.documentElement.style;
+  root.setProperty('--purple-600', hex);
+  root.setProperty('--purple-500', shadeHex(hex, 14));
+  root.setProperty('--purple-700', shadeHex(hex, -14));
+  root.setProperty('--purple-800', shadeHex(hex, -24));
+  root.setProperty('--purple-900', shadeHex(hex, -42));
+}
+let currentTextColor = '';
+let currentBoxColor = '';
+function applyTextColor(hex){
+  currentTextColor = hex;
+  document.documentElement.style.setProperty('--ink', hex);
+}
+function applyBoxColor(hex){
+  currentBoxColor = hex;
+  document.documentElement.style.setProperty('--white', hex);
+}
+const FONT_OPTIONS = [
+  { name:'Playful (Default)', heading:"'Baloo 2'", body:"'Inter'" },
+  { name:'Clean', heading:"'Poppins'", body:"'Poppins'" },
+  { name:'Friendly', heading:"'Nunito'", body:"'Nunito'" }
+];
+let currentFontChoice = 'Playful (Default)';
+function applyFontChoice(name){
+  const opt = FONT_OPTIONS.find(f => f.name === name) || FONT_OPTIONS[0];
+  currentFontChoice = opt.name;
+  document.documentElement.style.setProperty('--font-heading', opt.heading);
+  document.documentElement.style.setProperty('--font-body', opt.body);
+  document.querySelectorAll('.font-option-btn').forEach(b => b.classList.toggle('selected', b.dataset.name === opt.name));
+}
+function renderFontOptions(){
+  const row = $('dashFontRow');
+  if(!row) return;
+  row.innerHTML = '';
+  FONT_OPTIONS.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'font-option-btn' + (currentFontChoice === opt.name ? ' selected' : '');
+    btn.dataset.name = opt.name;
+    btn.innerHTML = '<div class="fo-name">' + opt.name + '</div><div class="fo-sample" style="font-family:' + opt.heading + '">Aa YouthEdge</div>';
+    btn.onclick = () => { applyFontChoice(opt.name); saveAppTheme({ font: opt.name }); };
+    row.appendChild(btn);
+  });
+}
+function applyBanner(text, enabled){
+  const el = $('announceBanner');
+  if(enabled && text){
+    el.textContent = text;
+    el.classList.remove('hidden');
+  } else {
+    el.classList.add('hidden');
+  }
+}
+async function loadAppTheme(){
+  try{
+    const snap = await getDoc(doc(db, 'appConfig', 'theme'));
+    if(snap.exists()){
+      const data = snap.data();
+      if(data.primary) applyBrandColor(data.primary);
+      if(data.textColor) applyTextColor(data.textColor);
+      if(data.boxColor) applyBoxColor(data.boxColor);
+      if(data.font) applyFontChoice(data.font);
+      if(data.textSize){ currentTextSize = data.textSize; document.body.style.zoom = TEXT_SCALES[data.textSize] || 1; }
+      applyBanner(data.bannerText || '', !!data.bannerEnabled);
+    }
+  }catch(e){}
+}
+function renderColorPresets(){
+  [ ['colorPresetGrid','customColorInput'], ['dashColorGrid','dashCustomColorInput'] ].forEach(([gridId, inputId]) => {
+    const grid = $(gridId);
+    if(!grid) return;
+    grid.innerHTML = '';
+    COLOR_PRESETS.forEach(p => {
+      const div = document.createElement('div');
+      div.className = 'color-preset' + (currentBrandColor.toLowerCase() === p.hex.toLowerCase() ? ' selected' : '');
+      div.style.background = p.hex;
+      const span = document.createElement('span');
+      span.textContent = p.name;
+      div.appendChild(span);
+      div.onclick = () => { applyBrandColor(p.hex); renderColorPresets(); $(inputId).value = p.hex; saveAppTheme(p.hex); };
+      grid.appendChild(div);
+    });
+  });
+}
+async function saveAppTheme(fields){
+  const note = $('dashSaveNote') || $('adminSaveNote');
+  if(note) note.textContent = 'Saving…';
+  try{
+    const payload = typeof fields === 'string' ? { primary: fields } : fields;
+    await setDoc(doc(db, 'appConfig', 'theme'), { ...payload, updatedAt: serverTimestamp(), updatedBy: currentUser ? currentUser.uid : '' }, { merge:true });
+    if(note) note.textContent = 'Saved — live for everyone now. ✅';
+  }catch(e){
+    if(note) note.textContent = '⚠️ Could not save (check Firestore rules).';
+  }
+}
+$('menuAdminItem').onclick = () => menuGo(() => {
+  renderColorPresets();
+  $('customColorInput').value = currentBrandColor;
+  $('adminSaveNote').textContent = '';
+  $('adminModal').classList.remove('hidden');
+});
+$('closeAdmin').onclick = () => $('adminModal').classList.add('hidden');
+$('applyColorBtn').onclick = () => {
+  const hex = $('customColorInput').value;
+  applyBrandColor(hex);
+  renderColorPresets();
+  saveAppTheme(hex);
+};
+$('resetColorBtn').onclick = () => {
+  applyBrandColor(DEFAULT_BRAND_COLOR);
+  renderColorPresets();
+  $('customColorInput').value = DEFAULT_BRAND_COLOR;
+  saveAppTheme(DEFAULT_BRAND_COLOR);
+};
+$('dashApplyColorBtn').onclick = () => {
+  const hex = $('dashCustomColorInput').value;
+  applyBrandColor(hex);
+  renderColorPresets();
+  saveAppTheme(hex);
+};
+$('dashApplyTextColorBtn').onclick = () => {
+  const hex = $('dashTextColorInput').value;
+  applyTextColor(hex);
+  saveAppTheme({ textColor: hex });
+};
+$('dashApplyBoxColorBtn').onclick = () => {
+  const hex = $('dashBoxColorInput').value;
+  applyBoxColor(hex);
+  saveAppTheme({ boxColor: hex });
+};
+$('dashResetAllBtn').onclick = () => {
+  applyBrandColor(DEFAULT_BRAND_COLOR);
+  applyTextColor('#1c1730');
+  applyBoxColor('#ffffff');
+  applyFontChoice('Playful (Default)');
+  applyTextScale('medium');
+  renderColorPresets();
+  renderFontOptions();
+  $('dashCustomColorInput').value = DEFAULT_BRAND_COLOR;
+  $('dashTextColorInput').value = '#1c1730';
+  $('dashBoxColorInput').value = '#ffffff';
+  saveAppTheme({ primary: DEFAULT_BRAND_COLOR, textColor: '#1c1730', boxColor: '#ffffff', font: 'Playful (Default)', textSize: 'medium' });
+  saveTextScale('medium');
+};
+$('bannerOnBtn').onclick = () => { $('bannerOnBtn').classList.add('active'); $('bannerOffBtn').classList.remove('active'); };
+$('bannerOffBtn').onclick = () => { $('bannerOffBtn').classList.add('active'); $('bannerOnBtn').classList.remove('active'); };
+$('saveBannerBtn').onclick = () => {
+  const text = $('bannerTextInput').value.trim();
+  const enabled = $('bannerOnBtn').classList.contains('active');
+  applyBanner(text, enabled);
+  saveAppTheme({ bannerText: text, bannerEnabled: enabled });
+};
+
+/* ---------------- Text size (global) ---------------- */
+const TEXT_SCALES = { small:0.9, medium:1, large:1.15 };
+let currentTextSize = 'medium';
+function applyTextScale(size){
+  currentTextSize = size;
+  const scale = TEXT_SCALES[size] || 1;
+  document.body.style.zoom = scale;
+  document.querySelectorAll('#dashTextSizeRow button').forEach(b => b.classList.toggle('active', b.dataset.size === size));
+}
+async function saveTextScale(size){
+  try{ await setDoc(doc(db, 'appConfig', 'theme'), { textSize: size }, { merge:true }); }catch(e){}
+}
+document.querySelectorAll('#dashTextSizeRow button').forEach(b => {
+  b.onclick = () => { applyTextScale(b.dataset.size); saveTextScale(b.dataset.size); };
+});
+
+/* ---------------- Admin: Users ---------------- */
+let allUsersCache = [];
+async function loadAllUsers(){
+  const list = $('adminUserList');
+  list.innerHTML = '<div class="career-loading">Loading users…</div>';
+  try{
+    const snap = await getDocs(collection(db, 'users'));
+    allUsersCache = [];
+    snap.forEach(d => allUsersCache.push({ uid:d.id, ...d.data() }));
+    renderUserList();
+  }catch(e){
+    list.innerHTML = '<div class="career-result">⚠️ Could not load users (check Firestore rules).</div>';
+  }
+}
+function renderUserList(){
+  const list = $('adminUserList');
+  const term = ($('userSearchInput').value || '').trim().toLowerCase();
+  const filtered = allUsersCache.filter(u => !term || (u.email || '').toLowerCase().includes(term));
+  list.innerHTML = '';
+  if(filtered.length === 0){
+    list.innerHTML = '<div class="community-empty">No users found.</div>';
+    return;
+  }
+  filtered.forEach(u => {
+    const row = document.createElement('div');
+    row.className = 'user-row' + (u.banned ? ' banned' : '');
+    const info = document.createElement('div');
+    info.className = 'ur-info';
+    const email = document.createElement('div');
+    email.className = 'ur-email';
+    email.textContent = (u.email || u.uid) + (u.banned ? ' 🚫' : '');
+    const meta = document.createElement('div');
+    meta.className = 'ur-meta';
+    meta.textContent = '🪙 ' + (u.points || 0) + ' pts · 🔥 ' + (u.streak || 0) + ' streak';
+    info.appendChild(email); info.appendChild(meta);
+    const btn = document.createElement('button');
+    btn.className = 'ban-btn ' + (u.banned ? 'do-unban' : 'do-ban');
+    btn.textContent = u.banned ? 'Unban' : 'Ban';
+    btn.onclick = async () => {
+      if(u.uid === currentUser.uid){ alert("You can't ban yourself."); return; }
+      btn.disabled = true;
+      try{
+        await updateDoc(doc(db, 'users', u.uid), { banned: !u.banned });
+        u.banned = !u.banned;
+        renderUserList();
+      }catch(e){ alert('Could not update user (check Firestore rules).'); }
+      btn.disabled = false;
+    };
+    row.appendChild(info); row.appendChild(btn);
+    list.appendChild(row);
+  });
+}
+$('userSearchInput').addEventListener('input', renderUserList);
+
+function renderAdminDashboard(){
+  renderColorPresets();
+  renderFontOptions();
+  $('dashCustomColorInput').value = currentBrandColor;
+  $('dashTextColorInput').value = currentTextColor || '#1c1730';
+  $('dashBoxColorInput').value = currentBoxColor || '#ffffff';
+  applyTextScale(currentTextSize);
+  const bannerEl = $('announceBanner');
+  const bannerCurrentlyOn = !bannerEl.classList.contains('hidden');
+  $('bannerTextInput').value = bannerCurrentlyOn ? bannerEl.textContent : '';
+  $('bannerOnBtn').classList.toggle('active', bannerCurrentlyOn);
+  $('bannerOffBtn').classList.toggle('active', !bannerCurrentlyOn);
+  loadAllUsers();
+}
+
+const LANG_NAMES = { en:"English", ar:"Arabic", es:"Spanish", fr:"French", zh:"Mandarin Chinese" };
+
+function buildSystemPrompt(){
+  let p;
+  if(stats.answerMode === 'direct'){
+    p = "You are a friendly, efficient tutor helping a student who is in a hurry. When they ask a " + currentSubject + " question, give the direct answer clearly right away, with a brief 1-2 sentence explanation of why — do not withhold the answer or ask guiding questions first.";
+    p += " The student is in " + schoolLevel + " school — match your vocabulary and difficulty to that level.";
+    p += " Respond in " + LANG_NAMES[currentLang] + ", regardless of what language the student writes in.";
+    p += " Keep responses short: 2-4 sentences.";
+    p += " Always end every reply with the exact token <<CORRECT>> on its own new line as the very last line (this token is hidden from the student, never mention or explain it).";
+  } else {
+    p = BASE_PROMPTS[currentSubject] || BASE_PROMPTS.Other;
+    if(currentTopic){
+      p += " Focus specifically on this topic within the subject: \"" + currentTopic + "\". Ask questions that test and build understanding of this exact topic, at a level appropriate for a beginner just starting it.";
+    }
+    p += " The student is in " + schoolLevel + " school — match your vocabulary and difficulty to that level.";
+    p += " Respond in " + LANG_NAMES[currentLang] + ", regardless of what language the student writes in.";
+    p += " Keep every response short: 2-4 sentences.";
+    p += " If, and only if, the student's most recent message correctly and completely answers/solves the current question, end your reply with the exact token <<CORRECT>> on its own new line as the very last line (this token is hidden from the student, do not explain it). Do not include this token otherwise.";
+  }
+  return p;
+}
+
+/* ---------------- Send message / Groq call ---------------- */
+async function sendMessage(forcedText, isBonusRequest){
+  const input = $('msgInput');
+  const text = forcedText !== undefined ? forcedText : input.value.trim();
+  if(!text) return;
+
+  if(!isBonusRequest){
+    chatHistory.push({ role:'user', content:text });
+  } else {
+    chatHistory.push({ role:'system-note', type:'system-note', content: '', __skipRender:true });
+    chatHistory.pop();
+    chatHistory.push({ role:'user', content:text });
+  }
+  if(forcedText === undefined) input.value = '';
+  renderChat();
+
+  chatHistory.push({ role:'assistant', content:'…', thinking:true });
+  renderChat();
+  $('sendBtn').disabled = true;
+
+  try{
+    const messages = [
+      { role:'system', content: buildSystemPrompt() },
+      ...chatHistory.filter(m => !m.thinking && !m.type).map(m => ({ role: m.role === 'user' ? 'user' : 'assistant', content: m.content }))
+    ];
+    const data = await groqChat({ model:'openai/gpt-oss-120b', messages, temperature:0.7, max_tokens:400 });
+    chatHistory.pop();
+    if(data.error){
+      chatHistory.push({ role:'assistant', content:'⚠️ ' + (data.error.message || 'Something went wrong with the AI request.') });
+    } else {
+      let reply = data.choices?.[0]?.message?.content || "Hmm, I didn't get a response — try again?";
+      const isCorrect = /<<CORRECT>>/.test(reply);
+      reply = reply.replace(/<<CORRECT>>/g, '').trim();
+      chatHistory.push({ role:'assistant', content: reply });
+      if(isCorrect){
+        let pts = awaitingBonusAnswer ? 5 : 1;
+        let boosted = false;
+        if((stats.doubleBoostUses||0) > 0){
+          pts = pts * 2;
+          stats.doubleBoostUses -= 1;
+          boosted = true;
+        }
+        stats.points = (stats.points || 0) + pts;
+        stats.coins = (stats.coins || 0) + pts;
+        const justUnlocked = stats.points >= 3000 && (stats.points - pts) < 3000;
+        persistStats();
+        renderStats();
+        awaitingBonusAnswer = false;
+        chatHistory.push({ type:'bonus-prompt', pointsAwarded: pts });
+        if(boosted){
+          chatHistory.push({ role:'assistant', content: '⚡ ' + t('doubleBoostName') + '!' });
+        }
+        if(justUnlocked){
+          chatHistory.push({ role:'assistant', content: t('membershipUnlockedNote') });
+        }
+        if(currentTopic){
+          topicCorrectCount += 1;
+          renderTopicBanner();
+          if(topicCorrectCount >= TOPIC_THRESHOLD){
+            const progress = getPathProgress(currentSubject);
+            const topics = PATHS[currentSubject] || [];
+            const topicIdx = topics.indexOf(currentTopic);
+            if(topicIdx === (progress.completedCount || 0)){
+              progress.completedCount = (progress.completedCount || 0) + 1;
+              stats.points = (stats.points || 0) + TOPIC_BONUS;
+              stats.coins = (stats.coins || 0) + TOPIC_BONUS;
+              persistStats();
+              renderStats();
+              chatHistory.push({ role:'assistant', content: t('topicCompleteMsg') });
+            }
+            currentTopic = null;
+            topicCorrectCount = 0;
+            renderTopicBanner();
+          }
+        }
+      }
+    }
+  }catch(err){
+    chatHistory.pop();
+    chatHistory.push({ role:'assistant', content:'⚠️ Network error — check your connection and try again.' });
+  }finally{
+    $('sendBtn').disabled = false;
+    renderChat();
+  }
+}
+
+$('sendBtn').onclick = () => sendMessage();
+$('msgInput').addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); sendMessage(); }
+});
+$('msgInput').addEventListener('input', function(){
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 110) + 'px';
+});
+
+/* ---------------- Photo upload -> vision extraction ---------------- */
+$('photoBtn').onclick = () => {
+  $('photoInput').click();
+};
+$('photoInput').addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async () => {
+    const base64 = reader.result;
+    const input = $('msgInput');
+    input.value = '...';
+    try{
+      const data = await groqChat({
+        model:'qwen/qwen3.6-27b',
+        messages:[{
+          role:'user',
+          content:[
+            { type:'text', text:'Extract only the exact homework question text visible in this image. Return just the question text, nothing else, no preamble.' },
+            { type:'image_url', image_url:{ url: base64 } }
+          ]
+        }],
+        temperature:0.2,
+        max_tokens:300
+      });
+      if(data.error){
+        input.value = '';
+        alert('Could not read the image: ' + data.error.message);
+      } else {
+        input.value = data.choices?.[0]?.message?.content?.trim() || '';
+        input.dispatchEvent(new Event('input'));
+        input.focus();
+      }
+    }catch(err){
+      input.value = '';
+      alert('Network error reading image.');
+    }
+    e.target.value = '';
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ---------------- Init ---------------- */
+applyTheme();
+refreshSchoolButtons();
+refreshModeButtons();
+applyTranslations();
+loadAppTheme();
+</script>
+</body>
+</html>
